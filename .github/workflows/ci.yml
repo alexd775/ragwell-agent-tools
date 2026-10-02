@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Python ${{ matrix.python }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ["3.11", "3.12", "3.13", "3.14"]
+        include:
+          - os: macos-latest
+            python: "3.12"
+          - os: windows-latest
+            python: "3.12"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "0.12.17"
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - name: Install locked environment
+        run: uv sync --locked
+      - name: Format
+        run: uv run --locked --no-sync ruff format --check .
+      - name: Lint
+        run: uv run --locked --no-sync ruff check .
+      - name: Type check
+        run: uv run --locked --no-sync mypy
+      - name: Test without external services
+        run: uv run --locked --no-sync pytest
+      - name: Check public guides and templates
+        run: uv run --locked --no-sync python scripts/check_documents.py
+      - name: Build independent distributions
+        run: uv build --no-sources
+      - name: Qualify installed wheel outside checkout
+        run: uv run --locked --no-sync python scripts/qualify_artifact.py

@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling>=1.32.3,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ragwell-agent-tools"
+version = "0.1.0a1"
+description = "Evidence search tools and workflows for agents using Ragwell"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "mcp==2.2.0",
+    "pydantic>=2.12,<3",
+    "ragwell>=0.2.0,<0.3",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+
+[project.scripts]
+ragwell-agent-tools = "ragwell_agent_tools.stdio:main"
+
+[project.urls]
+Repository = "https://github.com/alexd775/ragwell-agent-tools"
+Issues = "https://github.com/alexd775/ragwell-agent-tools/issues"
+
+[dependency-groups]
+dev = [
+    "build>=1.6.1,<2",
+    "hatchling>=1.32.3,<2",
+    "httpx>=0.27.2,<0.29",
+    "jsonschema>=4.26,<5",
+    "mypy>=2.3.1,<3",
+    "pytest>=9.1.1,<10",
+    "ruff>=0.16.8,<0.17",
+    "types-jsonschema>=4.25,<5",
+]
+
+[tool.uv]
+required-version = "==0.12.17"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ragwell_agent_tools"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests", "/scripts", "/skills", "/integrations", "/docs", "/examples", "/.github", "/AGENTS.md", "/CONTRIBUTING.md", "/SECURITY.md", "/LICENSE", "/README.md", "/pyproject.toml", "/uv.lock"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "tests", "scripts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib", "--strict-config", "--strict-markers", "-ra"]
+filterwarnings = ["error"]

@@ -1,0 +1,7 @@
+# Replace command with the absolute path to the installed executable.
+# Forward credentials from the host environment; do not write their values here.
+[mcp_servers.ragwell]
+command = "/absolute/path/to/ragwell-agent-tools"
+env_vars = ["RAGWELL_BASE_URL", "RAGWELL_PROJECT_ID", "RAGWELL_API_KEY"]
+startup_timeout_sec = 15
+tool_timeout_sec = 30

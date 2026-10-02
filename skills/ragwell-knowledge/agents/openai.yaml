@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ragwell knowledge"
+  short_description: "Find and cite evidence from your Ragwell documents"
+  default_prompt: "Use $ragwell-knowledge to answer my question with sources from Ragwell."

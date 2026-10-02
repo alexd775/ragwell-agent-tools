@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "ragwell": {
+      "type": "stdio",
+      "command": "${RAGWELL_TOOLS_COMMAND}",
+      "args": [],
+      "env": {
+        "RAGWELL_BASE_URL": "${RAGWELL_BASE_URL}",
+        "RAGWELL_PROJECT_ID": "${RAGWELL_PROJECT_ID}",
+        "RAGWELL_API_KEY": "${RAGWELL_API_KEY}"
+      }
+    }
+  }
+}

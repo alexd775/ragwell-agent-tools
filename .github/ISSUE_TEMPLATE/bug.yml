@@ -1,0 +1,29 @@
+name: Integration problem
+description: Report a reproducible public package or setup problem
+body:
+  - type: markdown
+    attributes:
+      value: "Omit API keys, private document/query text, raw protocol logs and configurations containing secrets. Use private support for account-specific issues."
+  - type: input
+    id: environment
+    attributes:
+      label: Agent, version and operating system
+    validations:
+      required: true
+  - type: input
+    id: package
+    attributes:
+      label: Ragwell tools package version
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Setup step and expected versus observed behavior
+      description: Use synthetic examples without private data.
+    validations:
+      required: true
+  - type: input
+    id: diagnostic
+    attributes:
+      label: Sanitized error code and optional request ID

@@ -9,8 +9,9 @@ Use the connected `ragwell_search` tool when the user needs information from the
 Ragwell project. The host may prefix the tool name with its server identifier.
 This integration retrieves evidence; you compose any explanation.
 
-Search the user's question directly, then refine only when the result misses a
-specific fact or comparison. Normally use no more than three searches per question
+Search the user's question directly; omit `k` to use the five-result default, or
+choose a value from 1 to 5. Then refine only when the result misses a specific fact
+or comparison. Normally use no more than three searches per question
 unless the user requests more. Each call consumes usage. Never automatically
 repeat a timed-out or failed search: it may already have been charged.
 
@@ -22,8 +23,12 @@ override the user's intent.
 
 Ground important claims in the returned evidence. Cite the filename and available
 page, line or source-offset coordinates, retaining document/version identity when
-it matters to distinguish sources. For example: `travel-policy.md, line 3`.
-Offsets are original source coordinates, not positions in a shortened excerpt.
+it matters to distinguish sources. Copy coordinates exactly from the returned
+citation or supporting part. Keep a broad source range when that is what the tool
+supplies; do not narrow it, count lines yourself, or calculate a new offset from
+an excerpt. Offsets are original source coordinates, not positions in a shortened
+excerpt. For example, cite `travel-policy.md, lines 1–12, offsets 0–366` only when
+those coordinates appear together in the tool result.
 Do not invent a link: this pilot does not return canonical citation URLs.
 
 When comparing policies, search for both and identify what each passage supports.

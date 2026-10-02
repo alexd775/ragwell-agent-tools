@@ -5,7 +5,7 @@ independent public tools package and ordinary-user onboarding. This repository
 owns implementation planning and public qualification evidence; Ragwell's backend
 project retains cross-repository contract and identity decisions.
 
-## Local pilot active
+## Local task pilot complete
 
 Deliver the independently installed stdio search tool, one canonical skill,
 Codex/Claude Code templates, synthetic workflow examples, and truthful local guides.
@@ -14,19 +14,30 @@ coordinates and evidence/context distinctions; bound output, deadlines, admissio
 and attempts; never replay a metered search automatically.
 
 The local candidate and its deterministic/clean installed-artifact gates are
-implemented and passed on macOS across Python 3.11–3.14. Completion still requires
-endpoint-only live beta authorization/failure checks and
-the three sample workflows in real named Codex/Claude Code versions. Fixture HTTP
-tests establish adapter behavior, not the live backend's tenant policy or a model's
-task/citation/injection behavior. Track those separately in
+implemented and passed on macOS across Python 3.11–3.14. On 2026-10-02 Alex accepted
+the live corpus/scope/revocation/foreign-project endpoint checks for pilot sequencing,
+with expiry, quota and rate cases explicitly deferred and still unverified.
+Codex CLI 0.131.0 and Claude Code 2.1.148 now pass all three guarded model workflows
+and pre-revoked-key handling with checked citations. Codex's explicit project-skill
+invocation and Claude's native project-skill body loading were exercised. This
+closes the advanced local task pilot; interactive and ordinary-user onboarding
+remain later qualification. Fixture HTTP tests establish adapter behavior, not
+the live backend's tenant policy or a model's task/citation/injection behavior.
+Track those separately in
 [qualification](qualification.md) and [compatibility](../compatibility.md).
 
-## Supported read access planned
+## Supported read access active
 
 Add source expansion and workflow-driven discovery after backend contract work.
 Search needs generation-safe source references; machine discovery must expose only
 current effective scopes and granted projects. Every invocation remains authorized
 even when a tool is visible. Do not expose the entire REST API or bulk exports.
+
+The initial code assessment found a bounded source-inspection endpoint and persisted
+generation IDs, but search projections currently omit the generation ID. Carry it
+through search before adding `ragwell_fetch_source`; no backend behavior has changed
+in this assessment. Backend-owned contract and discovery-policy work is the next
+implementation step.
 
 Link API/OpenAPI changes, generated SDK/dashboard updates, any migrations, tool
 changes and relevant tenant/reindex/delete/golden gates in one delivery record.

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import json
+import logging
 import os
 import sys
 from collections.abc import Mapping
@@ -12,6 +14,7 @@ from uuid import UUID
 
 from mcp import Client, StdioServerParameters
 
+from ragwell_agent_tools.diagnostics import describe
 from ragwell_agent_tools.settings import Settings, SettingsError
 
 CASES = {
@@ -39,19 +42,67 @@ QUERIES = (
         "project-decisions.md",
     ),
 )
+FAILURE_CODES = frozenset(
+    {
+        "unknown_tool",
+        "invalid_arguments",
+        "busy",
+        "local_budget_exhausted",
+        "not_ready",
+        "authentication_failed",
+        "access_denied",
+        "project_unavailable",
+        "quota_exceeded",
+        "rate_limited",
+        "request_rejected",
+        "search_timeout",
+        "connection_failed",
+        "invalid_response",
+        "api_unavailable",
+        "search_failed",
+    }
+)
+
+
+def failure_code(data: object) -> str:
+    """Only known adapter codes may leave an untrusted tool response."""
+    code = data.get("code") if isinstance(data, dict) else None
+    return (
+        code
+        if isinstance(code, str) and code in FAILURE_CODES
+        else "invalid_tool_response"
+    )
+
+
+def exception_details(error: BaseException, depth: int = 0) -> dict[str, object]:
+    """Expose nested protocol failures without messages, arguments or values."""
+    details = describe(error)
+    if depth < 3:
+        if isinstance(error, BaseExceptionGroup):
+            details["exceptions"] = [
+                exception_details(item, depth + 1) for item in error.exceptions[:4]
+            ]
+        elif error.__cause__ is not None:
+            details["caused_by"] = exception_details(error.__cause__, depth + 1)
+    return details
 
 
 def parameters(settings: Settings, command: str | None) -> StdioServerParameters:
+    env = {
+        "RAGWELL_BASE_URL": settings.base_url,
+        "RAGWELL_PROJECT_ID": str(settings.project_id),
+        "RAGWELL_API_KEY": settings.api_key,
+        "RAGWELL_TIMEOUT_SECONDS": str(settings.timeout_seconds),
+        "RAGWELL_MAX_OUTPUT_BYTES": str(settings.max_output_bytes),
+        "RAGWELL_MAX_SEARCHES": str(settings.max_searches),
+        "RAGWELL_ALLOW_LOCAL_HTTP": str(settings.allow_local_http).lower(),
+    }
+    if settings.debug_log is not None:
+        env["RAGWELL_DEBUG_LOG"] = str(settings.debug_log)
     return StdioServerParameters(
         command=command or sys.executable,
         args=[] if command else ["-m", "ragwell_agent_tools.stdio"],
-        env={
-            "RAGWELL_BASE_URL": settings.base_url,
-            "RAGWELL_PROJECT_ID": str(settings.project_id),
-            "RAGWELL_API_KEY": settings.api_key,
-            "RAGWELL_TIMEOUT_SECONDS": str(settings.timeout_seconds),
-            "RAGWELL_MAX_SEARCHES": str(settings.max_searches),
-        },
+        env=env,
     )
 
 
@@ -93,14 +144,15 @@ async def qualify(
                 "The foreign project fixture must differ from the allowed project"
             )
         foreign_config = replace(settings, project_id=foreign_id)
+    read_timeout = max(30.0, settings.timeout_seconds + 5)
     async with Client(
-        parameters(settings, command), mode="legacy", read_timeout_seconds=30
+        parameters(settings, command), mode="legacy", read_timeout_seconds=read_timeout
     ) as client:
         for label, query, filename in QUERIES:
             result = await client.call_tool("ragwell_search", {"query": query})
             data = result.structured_content
             if result.is_error or not isinstance(data, dict):
-                print(f"FAIL {label}: search rejected", file=sys.stderr)
+                print(f"FAIL {label}: {failure_code(data)}", file=sys.stderr)
                 return 1
             matches = data.get("matches", [])
             if not any(
@@ -122,7 +174,9 @@ async def qualify(
             print(f"SKIP {label}: fixture credential absent")
             continue
         async with Client(
-            parameters(config, command), mode="legacy", read_timeout_seconds=30
+            parameters(config, command),
+            mode="legacy",
+            read_timeout_seconds=read_timeout,
         ) as client:
             result = await client.call_tool(
                 "ragwell_search", {"query": "integration qualification"}
@@ -133,12 +187,17 @@ async def qualify(
             or not isinstance(data, dict)
             or data.get("code") not in expected
         ):
-            print(f"FAIL {label}: expected denial missing", file=sys.stderr)
+            print(
+                f"FAIL {label}: expected denial missing ({failure_code(data)})",
+                file=sys.stderr,
+            )
             return 1
         print(f"PASS {label}: expected denial")
     if foreign_config is not None:
         async with Client(
-            parameters(foreign_config, command), mode="legacy", read_timeout_seconds=30
+            parameters(foreign_config, command),
+            mode="legacy",
+            read_timeout_seconds=read_timeout,
         ) as client:
             result = await client.call_tool(
                 "ragwell_search", {"query": "integration qualification"}
@@ -149,7 +208,10 @@ async def qualify(
             or not isinstance(data, dict)
             or data.get("code") not in {"access_denied", "project_unavailable"}
         ):
-            print("FAIL foreign_project: expected denial missing", file=sys.stderr)
+            print(
+                f"FAIL foreign_project: expected denial missing ({failure_code(data)})",
+                file=sys.stderr,
+            )
             return 1
         print("PASS foreign_project: expected denial")
     else:
@@ -162,7 +224,9 @@ def main() -> None:
         description="Run four metered synthetic-corpus searches and opt-in denial cases.",
         epilog="Fixture variables: "
         + ", ".join(variable for variable, _ in CASES.values())
-        + ", RAGWELL_QA_FOREIGN_PROJECT_ID. Never put key values in arguments or files.",
+        + ", RAGWELL_QA_FOREIGN_PROJECT_ID. For a local .env, run "
+        "uv run --locked --no-sync --env-file .env python scripts/qualify_endpoint.py. "
+        "Never put key values in arguments or committed files.",
     )
     parser.add_argument(
         "--command",
@@ -174,6 +238,8 @@ def main() -> None:
         help="Fail before searches if any denial fixture is absent",
     )
     args = parser.parse_args()
+    # MCP validation/transport logs may contain response data or arguments.
+    logging.basicConfig(level=logging.CRITICAL, stream=sys.stderr)
     try:
         status = asyncio.run(
             qualify(Settings.from_env(), args.command, args.require_all)
@@ -181,10 +247,13 @@ def main() -> None:
     except SettingsError as exc:
         print(f"qualification_configuration_error: {exc}", file=sys.stderr)
         status = 2
-    except Exception:
+    except Exception as exc:
         print(
-            "qualification_failed: connection or fixture error; no raw details emitted",
+            "qualification_failed: MCP connection, protocol or fixture error",
             file=sys.stderr,
+        )
+        print(
+            json.dumps(exception_details(exc), separators=(",", ":")), file=sys.stderr
         )
         status = 1
     raise SystemExit(status)

@@ -4,6 +4,7 @@
 |---|---|
 | Ragwell is missing or the process cannot start | Check the full executable path and the three required environment variables. Start the agent from the same environment. |
 | `authentication_failed` | Replace an expired/revoked key in credential settings and restart. Never send the key in chat. |
+| Claude says its OAuth access token has expired, even though `/mcp` connects | Run `claude auth login` again and complete the browser sign-in. A saved login can still contain an expired provider token; this error occurs before a Ragwell search. |
 | `access_denied` | Check that the key has `retrieval:search` for the configured project. |
 | `project_unavailable` | Check the configured project ID and its current availability/access in Ragwell. |
 | Successful search with no matches | Check that documents are ready and try a more specific question. |

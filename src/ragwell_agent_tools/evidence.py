@@ -48,8 +48,8 @@ class Citation(OutputModel):
 
 class Scores(OutputModel):
     final: float
-    text: float | None
-    vector: float | None
+    text: float | None = None
+    vector: float | None = None
     hybrid: float | None = None
     rerank: float | None = None
     rerank_confidence: float | None = None

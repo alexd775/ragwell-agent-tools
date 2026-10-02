@@ -23,6 +23,8 @@ from .helpers import PROJECT_ID, platform_environment, result_data, search_body
 class Peer:
     origin: str = ""
     requests: list[dict[str, Any]] = field(default_factory=list)
+    filenames: dict[str, str] = field(default_factory=dict)
+    nullable_scores: bool = False
 
 
 @pytest.fixture
@@ -39,6 +41,15 @@ def peer() -> Iterator[Peer]:
             value.requests.append({"path": self.path, "body": request})
             status = 200
             payload = search_body()
+            payload["items"][0]["source_filename"] = value.filenames.get(
+                request["query"], "travel-policy.md"
+            )
+            if value.nullable_scores:
+                payload["items"][0]["scores"] = {
+                    "final": 0.7,
+                    "text": None,
+                    "vector": None,
+                }
             if authority in {"Bearer revoked-fixture", "Bearer expired-fixture"}:
                 status = 401
             elif (
@@ -126,6 +137,24 @@ def test_real_stdio_handshake_search_and_clean_shutdown(
     captured = capfd.readouterr()
     assert captured.out == ""
     assert captured.err == ""
+
+
+@pytest.mark.parametrize("mode", ["legacy", "auto"])
+def test_stdio_accepts_absent_component_scores(
+    peer: Peer, tmp_path: Path, mode: str
+) -> None:
+    peer.nullable_scores = True
+
+    async def scenario() -> None:
+        async with Client(parameters(peer.origin, tmp_path), mode=mode) as client:
+            result = await client.call_tool(
+                "ragwell_search", {"query": "synthetic query"}
+            )
+            assert not result.is_error
+            assert result_data(result)["matches"][0]["scores"] == {"final": 0.7}
+
+    asyncio.run(scenario())
+    assert len(peer.requests) == 1
 
 
 @pytest.mark.parametrize(

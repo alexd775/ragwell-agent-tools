@@ -12,8 +12,10 @@ release are omitted until deliberately projected, so searches keep working.
 | Adapter and SDK HTTP contract | Local deterministic gates passed | Validation, result bounds, provenance, cancellation/admission and deliberate failures against synthetic peers |
 | MCP in-process and stdio | Local protocol gates passed | Discovery/search, clean shutdown, legacy and modern connection modes; no model task evaluation |
 | Clean installed wheel | Passed on macOS arm64, Python 3.11–3.14 | 74 tests per clean environment outside source/backend checkouts |
-| Codex CLI | Configuration supplied; real tasks pending | Installed client observed: 0.131.0; not yet a workflow certification |
-| Claude Code | Configuration supplied; real tasks pending | Installed client observed: 2.1.148; not yet a workflow certification |
+| Component-score schema repair | Passed on macOS arm64, Python 3.12.14 | 79 source/installed-wheel tests; both stdio modes accept unavailable scores |
+| Live beta endpoint pilot | Accepted by Alex after seven passing cases | Four corpus checks plus scope/revoked/foreign-project denials; live expiry/quota/rate deferred, second-tenant ownership unconfirmed |
+| Codex CLI 0.131.0 | Three guarded real tasks, explicit project-skill invocation and pre-revoked-key handling passed | Installed wheel on macOS 26.6.2 arm64; exact citations after skill repair; one known hostile fixture ignored; interactive onboarding unverified |
+| Claude Code 2.1.148 / claude-opus-5-5 | Three guarded real tasks, native project-skill loading and pre-revoked-key handling passed | Same installed wheel/OS; exact citations and known hostile fixture handling; one initial API-unavailable call stopped without replay, fresh QA task subsequently passed; interactive onboarding unverified |
 | Codex desktop/cloud | Planned qualification | Local CLI configuration is not evidence for other surfaces |
 | ChatGPT Work | Hosted OAuth planned | Local API-key adapter cannot supply its remote authentication |
 | Claude desktop/web and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
@@ -26,5 +28,4 @@ The package has not been published to PyPI or submitted to an agent directory.
 An installable source artifact, public listing and qualified account/workspace
 connection are separate milestones. Requalify host guides when behavior changes.
 
-CI is configured for Linux on Python 3.11–3.14 and macOS/Windows on 3.12. It has
-not run remotely yet; local macOS results do not qualify those other operating systems.
+CI is configured for Linux on Python 3.11–3.14 and macOS/Windows on 3.12.

@@ -38,8 +38,12 @@ generation identity, and `ragwell_fetch_source` expands only issued references
 through the published SDK's existing bounded reader. The updated API returns
 source document/version identity, which the adapter verifies before disclosing
 text. No migration is needed. See [source qualification](source-expansion.md).
-Capability policy/discovery, grant-based visibility, installation assistance and
-real expanded host tasks remain outstanding; this stage remains active.
+Source expansion now passed guarded Codex/Claude workflows with public SDK 0.2.1;
+see [dated host evidence](source-host-qualification.md). The backend accepted bounded
+bearer-only discovery and prepared its API and SDK 0.2.2 consumer. Deploy that API
+and publish the SDK before this repository consumes its public resource.
+Grant-based visibility and installation assistance remain outstanding; this stage
+stays active. The qualified workflows do not require another document-list tool.
 
 Link API/OpenAPI changes, generated SDK/dashboard updates, any migrations, tool
 changes and relevant tenant/reindex/delete/golden gates in one delivery record.

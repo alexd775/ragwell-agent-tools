@@ -1,5 +1,9 @@
 # Local pilot qualification
 
+Expanded 0.1.0a2 source reads have separate
+[2026-10-03 live host qualification](source-host-qualification.md), with public
+SDK 0.2.1. The historical search-only pilot evidence below remains unchanged.
+
 Date: 2026-10-02. The local pilot candidate is implemented and locally qualified.
 The four positive live beta corpus checks and the supplied scope/revocation/
 foreign-project denials now pass. Alex accepted this endpoint gate for pilot

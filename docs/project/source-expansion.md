@@ -1,5 +1,10 @@
 # Source expansion candidate
 
+The following is the historical 2026-10-02 local qualification record. SDK 0.2.1
+has since been published, hosted tools CI passed, and source expansion passed
+seven guarded real tasks; see [2026-10-03 host evidence](source-host-qualification.md).
+The old candidate digest below remains distinct from the published SDK wheel.
+
 Unpublished `ragwell-agent-tools` 0.1.0a2 adds `ragwell_fetch_source` alongside
 search. It uses the existing public SDK 0.2.0 source reader; no private API checkout,
 backend import, new HTTP client or unpublished SDK dependency is needed.

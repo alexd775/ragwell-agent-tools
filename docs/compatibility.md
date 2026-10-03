@@ -16,6 +16,7 @@ release are omitted until deliberately projected, so searches keep working.
 | Live beta endpoint pilot | Accepted by Alex after seven passing cases | Four corpus checks plus scope/revoked/foreign-project denials; live expiry/quota/rate deferred, second-tenant ownership unconfirmed |
 | Codex CLI 0.131.0 | Three guarded real tasks, explicit project-skill invocation and pre-revoked-key handling passed | Installed wheel on macOS 26.6.2 arm64; exact citations after skill repair; one known hostile fixture ignored; interactive onboarding unverified |
 | Claude Code 2.1.148 / claude-opus-5-5 | Three guarded real tasks, native project-skill loading and pre-revoked-key handling passed | Same installed wheel/OS; exact citations and known hostile fixture handling; one initial API-unavailable call stopped without replay, fresh QA task subsequently passed; interactive onboarding unverified |
+| Source reads: Codex CLI 0.131.0 and Claude Code 2.1.287 / claude-opus-5-5 | Seven guarded tasks passed with 0.1.0a2 / public SDK 0.2.1 | Exact issued identities, fixture slices, citations and native skill invocation; [dated evidence](project/source-host-qualification.md); static visibility, other surfaces and onboarding still unqualified |
 | Codex desktop/cloud | Planned qualification | Local CLI configuration is not evidence for other surfaces |
 | ChatGPT Work | Hosted OAuth planned | Local API-key adapter cannot supply its remote authentication |
 | Claude desktop/web and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
@@ -26,6 +27,7 @@ deliberate until machine capabilities discovery exists. Keys must carry current
 requires `document:read` and the updated generation/source identity contract.
 The new 0.1.0a2 source-fetch candidate has separate deterministic qualification;
 the earlier Codex/Claude task evidence applies to the search-only 0.1.0a1 pilot.
+The dated 2026-10-03 record separately qualifies 0.1.0a2 source expansion.
 
 The package has not been published to PyPI or submitted to an agent directory.
 An installable source artifact, public listing and qualified account/workspace

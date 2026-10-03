@@ -24,7 +24,9 @@ already returned or open the document in Ragwell.
 ## Install the local tool
 
 Use Python 3.11 or newer and [uv](https://docs.astral.sh/uv/getting-started/installation/).
-From a checkout containing this pilot, run:
+Download the [public tools repository](https://github.com/alexd775/ragwell-agent-tools)
+using **Code → Download ZIP**, unzip it, and open a terminal in the extracted
+folder. From that folder, run:
 
 ```sh
 uv tool install . --python 3.12

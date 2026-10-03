@@ -26,7 +26,7 @@ the live backend's tenant policy or a model's task/citation/injection behavior.
 Track those separately in
 [qualification](qualification.md) and [compatibility](../compatibility.md).
 
-## Supported read access active
+## Supported read access complete
 
 Add source expansion and workflow-driven discovery after backend contract work.
 Search needs generation-safe source references; machine discovery must expose only
@@ -49,10 +49,14 @@ dashboard installation help and public guide synchronization passed local gates.
 The candidate passed 131 source/installed tests, all six hosted CI jobs, four live
 unmetered grant cases, and seven guarded host tasks; see
 [current-grant qualification](grant-host-qualification.md). Two initial embedding
-timeouts remain separate reliability findings. Dashboard delivery and public
-guide deployment remain linked final steps; this stage stays active until those
-delivery gates finish. The qualified
-workflows do not require another document-list tool.
+timeouts remain separate reliability findings. On 2026-10-03 both the dashboard
+setup help and canonical public guides were deployed through their independent
+beta workflows, with scanned immutable artifacts and verified host health. All
+ten [public agent pages](https://docs.ragwell.dev/agents/) returned HTTP 200, and
+the updated SDK reference was live. The browser session required sign-in, so no
+authenticated live dashboard walkthrough is claimed; component and HTTP golden
+gates passed. This completes supported read access for the advanced local beta.
+The qualified workflows do not require another document-list tool.
 
 Link API/OpenAPI changes, generated SDK/dashboard updates, any migrations, tool
 changes and relevant tenant/reindex/delete/golden gates in one delivery record.

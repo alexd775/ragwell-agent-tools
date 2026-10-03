@@ -39,14 +39,19 @@ through the published SDK's existing bounded reader. The updated API returns
 source document/version identity, which the adapter verifies before disclosing
 text. No migration is needed. See [source qualification](source-expansion.md).
 Source expansion now passed guarded Codex/Claude workflows with public SDK 0.2.1;
-see [dated host evidence](source-host-qualification.md). The backend accepted bounded
-bearer-only discovery and prepared its API and SDK 0.2.2 consumer. Deploy that API
-and publish the SDK before this repository consumes its public resource.
+see [dated host evidence](source-host-qualification.md). The backend accepted
+bounded bearer-only discovery and deployed its API; SDK 0.2.2 was published before
+this repository adopted its public resource.
 The deployed discovery API and published SDK 0.2.2 now passed exact staged/public
 wheel sync/async live discovery. Candidate 0.1.0a3 consumes the public SDK, checks
 grants before listing/dispatch, and adds `--check` without search usage. Updated
-dashboard installation help and public guide synchronization are being qualified;
-this stage stays active until the linked delivery gates finish. The qualified
+dashboard installation help and public guide synchronization passed local gates.
+The candidate passed 131 source/installed tests, all six hosted CI jobs, four live
+unmetered grant cases, and seven guarded host tasks; see
+[current-grant qualification](grant-host-qualification.md). Two initial embedding
+timeouts remain separate reliability findings. Dashboard delivery and public
+guide deployment remain linked final steps; this stage stays active until those
+delivery gates finish. The qualified
 workflows do not require another document-list tool.
 
 Link API/OpenAPI changes, generated SDK/dashboard updates, any migrations, tool

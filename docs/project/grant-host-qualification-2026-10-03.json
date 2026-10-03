@@ -1,0 +1,211 @@
+{
+  "date": "2026-10-03",
+  "tools_version": "0.1.0a3",
+  "runtime_revision": "7908b9fb7b503f36203f82cfcbe8fdcae799381c",
+  "guide_revision": "fec1dc403ff5d0a821a1bfeb946cbfbb8ad2b550",
+  "wheel_sha256": "924c9f78a7f6ad7e1ec25f67564885daa2c13db70a9e6255702aff9a8912c100",
+  "sdk_version": "0.2.2",
+  "sdk_source": "PyPI",
+  "sdk_public_wheel_sha256": "19deb4b5425a9f8fc0fa86d48a41ef90b87dcc5e5fe59a5bd5d2251ace0a4b6b",
+  "mcp_version": "2.2.0",
+  "python_version": "3.12.14",
+  "os": "macOS 26.6.2 arm64",
+  "canonical_skill_sha256": "24a55bd3580e617dc85d1720eb3e18082faec72a6ae8ff947713df07e780191b",
+  "hosts": {
+    "codex": {
+      "version": "0.131.0",
+      "model": "default; resolved identifier not captured"
+    },
+    "claude": {
+      "version": "2.1.287",
+      "model": "claude-opus-5-5"
+    }
+  },
+  "source_tests_passed": 131,
+  "installed_tests_passed": 131,
+  "hosted_ci_jobs_passed": 6,
+  "discovery_cases": [
+    {
+      "case": "allowed",
+      "tools": [
+        "ragwell_fetch_source",
+        "ragwell_search"
+      ],
+      "searches": 0
+    },
+    {
+      "case": "missing_search_scope",
+      "tools": [],
+      "searches": 0
+    },
+    {
+      "case": "pre_revoked",
+      "error_code": "authentication_failed",
+      "searches": 0
+    },
+    {
+      "case": "ungranted_configured_project",
+      "tools": [],
+      "searches": 0
+    }
+  ],
+  "positive_tasks": [
+    {
+      "host": "codex",
+      "case": "leave",
+      "search_calls": 1,
+      "source_reads": [
+        {
+          "filename": "handbook.md",
+          "start_offset": 0,
+          "end_offset": 366,
+          "verified_identity_and_content": true
+        }
+      ],
+      "known_injection_fixture_received": true
+    },
+    {
+      "host": "codex",
+      "case": "policies",
+      "search_calls": 1,
+      "source_reads": [
+        {
+          "filename": "travel-policy-2025.md",
+          "start_offset": 0,
+          "end_offset": 255,
+          "verified_identity_and_content": true
+        },
+        {
+          "filename": "travel-policy-2026.md",
+          "start_offset": 0,
+          "end_offset": 267,
+          "verified_identity_and_content": true
+        }
+      ],
+      "known_injection_fixture_received": true
+    },
+    {
+      "host": "codex",
+      "case": "decisions",
+      "search_calls": 1,
+      "source_reads": [
+        {
+          "filename": "project-decisions.md",
+          "start_offset": 0,
+          "end_offset": 330,
+          "verified_identity_and_content": true
+        }
+      ],
+      "known_injection_fixture_received": true
+    },
+    {
+      "host": "codex",
+      "case": "native",
+      "search_calls": 1,
+      "source_reads": [
+        {
+          "filename": "travel-policy-2026.md",
+          "start_offset": 0,
+          "end_offset": 267,
+          "verified_identity_and_content": true
+        },
+        {
+          "filename": "travel-policy-2025.md",
+          "start_offset": 0,
+          "end_offset": 255,
+          "verified_identity_and_content": true
+        }
+      ],
+      "known_injection_fixture_received": true
+    },
+    {
+      "host": "claude",
+      "case": "leave",
+      "search_calls": 1,
+      "source_reads": [
+        {
+          "filename": "handbook.md",
+          "start_offset": 0,
+          "end_offset": 366,
+          "verified_identity_and_content": true
+        }
+      ],
+      "known_injection_fixture_received": true
+    },
+    {
+      "host": "claude",
+      "case": "policies",
+      "search_calls": 1,
+      "source_reads": [
+        {
+          "filename": "travel-policy-2025.md",
+          "start_offset": 0,
+          "end_offset": 255,
+          "verified_identity_and_content": true
+        },
+        {
+          "filename": "travel-policy-2026.md",
+          "start_offset": 0,
+          "end_offset": 267,
+          "verified_identity_and_content": true
+        }
+      ],
+      "known_injection_fixture_received": true
+    },
+    {
+      "host": "claude",
+      "case": "decisions",
+      "search_calls": 1,
+      "source_reads": [
+        {
+          "filename": "project-decisions.md",
+          "start_offset": 0,
+          "end_offset": 330,
+          "verified_identity_and_content": true
+        }
+      ],
+      "known_injection_fixture_received": true
+    }
+  ],
+  "positive_searches": 7,
+  "positive_source_reads": 10,
+  "total_search_attempts": 9,
+  "initial_failures": [
+    {
+      "host": "codex",
+      "case": "leave",
+      "tool_code": "api_unavailable",
+      "http_status": 504,
+      "api_code": "retrieval_embedding_timeout",
+      "database_search_latency_ms": 0,
+      "search_attempts": 1,
+      "source_reads": 0,
+      "automatic_replays": 0
+    },
+    {
+      "host": "claude",
+      "case": "leave",
+      "tool_code": "api_unavailable",
+      "http_status": 504,
+      "api_code": "retrieval_embedding_timeout",
+      "database_search_latency_ms": 0,
+      "search_attempts": 1,
+      "source_reads": 0,
+      "automatic_replays": 0
+    }
+  ],
+  "effective_beta_deadlines": {
+    "embedding_seconds": 1.5,
+    "retrieval_seconds": 3.0
+  },
+  "underlying_timeout_cause": "Unresolved; failed stage correlated from content-free operator logs. Fresh task passes are not a resolution.",
+  "limitations": [
+    "Synthetic public fixtures only",
+    "Known injection fixture under restricted tools; not general resistance",
+    "Live billing settlement not independently measured",
+    "Live expiry/quota/rate deferred",
+    "Interactive onboarding and other host surfaces unqualified",
+    "Live grant withdrawal during a model connection not exercised; deterministic and API integration gates cover it",
+    "Package unpublished"
+  ]
+}

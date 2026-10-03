@@ -1,5 +1,9 @@
 # Local pilot qualification
 
+Current-grant discovery and source reads in 0.1.0a3 have separate
+[2026-10-03 host and artifact qualification](grant-host-qualification.md), using
+public SDK 0.2.2. The earlier records below remain historical.
+
 Expanded 0.1.0a2 source reads have separate
 [2026-10-03 live host qualification](source-host-qualification.md), with public
 SDK 0.2.1. The historical search-only pilot evidence below remains unchanged.

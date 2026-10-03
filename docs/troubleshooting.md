@@ -1,5 +1,18 @@
 # Troubleshoot your Ragwell connection
 
+## Hosted ChatGPT beta
+
+| What you see | What to do |
+|---|---|
+| Custom MCP setup is unavailable | Check the beta invitation and ask the maintainer about your account's supported route. Personal plugin qualification does not establish managed-workspace availability. |
+| OAuth discovery fails or shows another callback | Check the exact beta `/mcp` URL and public client ID in the [ChatGPT guide](connect/chatgpt-work.md). Leave the client secret empty. Report the failing step; do not invent a callback or paste credentials. |
+| Ragwell says the request expired | Restart from ChatGPT's **Continue connecting app** control. Pending approval lasts 10 minutes and creates no grant after expiry. |
+| The wrong project/account appears | Cancel, open the intended browser profile/account and restart. Check the selected project before approving. |
+| ChatGPT asks to reconnect | Check Ragwell's **Agent connections**. If disconnected or expired, reconnect from the plugin and approve the intended project/read access again. |
+| A search reports an embedding timeout | Stop; usage may have been recorded. Deployment warm-up is an accepted beta limitation. Decide deliberately whether a separate new attempt is needed; never automatically replay. |
+
+## Local agents
+
 | What you see | What to do |
 |---|---|
 | Ragwell is missing or the process cannot start | Check the full executable path and the three required environment variables. Start the agent from the same environment. |

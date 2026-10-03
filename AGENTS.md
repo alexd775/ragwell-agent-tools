@@ -25,7 +25,7 @@ retrieval. Read `docs/project/strategy.md`, `docs/project/plan.md`, and
   the exact client/surface/version. Do not advertise tested host support from
   generic MCP compatibility or a loopback fixture alone.
 - Keep guides for ordinary users separate from contributor/reference material.
-  Hosted OAuth and nontechnical onboarding remain later stages.
+  Qualify hosted OAuth and nontechnical onboarding separately from local tasks.
 - Lock dependencies with uv 0.12.17. Run format, lint, strict type checking,
   deterministic tests, and clean installed-artifact qualification for changes.
   Do not add suppressions to hide failures or claim unrun checks passed.

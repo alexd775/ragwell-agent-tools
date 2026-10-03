@@ -1,7 +1,7 @@
 # Connect your Ragwell knowledge
 
 This local early-access setup is for people comfortable using a terminal. If you
-prefer a sign-in-and-connect flow, follow the [hosted connection plan](connect/chatgpt-work.md).
+prefer a sign-in-and-connect flow, follow the [ChatGPT beta connection guide](connect/chatgpt-work.md).
 The pilot retrieves passages and citations from one project; your agent explains them.
 
 ## Prepare your project

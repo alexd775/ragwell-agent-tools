@@ -22,11 +22,12 @@ this repository owns bounded projection, agent workflows, user guides and client
 qualification. Documentation should publish from this source through Ragwell's
 public docs site rather than diverging into independently edited copies.
 
-Use a dedicated API key for local agents. Hosted ChatGPT Work needs OAuth account
-linking; a raw Ragwell key cannot be supplied through its documented remote-plugin
-authentication. The hosted grant and deployment design must be accepted before
-implementation. A user-bound grant is recommended, with project-specific consent
-and current membership checks. Existing organization-owned service accounts keep
+Use a dedicated API key for local agents. Hosted ChatGPT plugins use OAuth account
+linking; a raw Ragwell key cannot be supplied through the documented remote-plugin
+authentication. The accepted beta design uses user-bound grants, one-project
+consent and current membership checks. The Personal custom-MCP flow now passed
+guarded live tasks and disconnect/reconnect; managed workspaces and other hosted
+surfaces require their own qualification. Existing organization-owned service accounts keep
 their separate lifecycle.
 [OpenAI authentication](https://developers.openai.com/plugins/build/auth).
 

@@ -19,7 +19,8 @@ release are omitted until deliberately projected, so searches keep working.
 | Source reads: Codex CLI 0.131.0 and Claude Code 2.1.287 / claude-opus-5-5 | Seven guarded tasks passed with 0.1.0a2 / public SDK 0.2.1 | Exact issued identities, fixture slices, citations and native skill invocation; [dated evidence](project/source-host-qualification.md); static visibility, other surfaces and onboarding still unqualified |
 | Current-grant discovery and source reads | 0.1.0a3 / public SDK 0.2.2: 131 source and installed tests, six hosted CI jobs, four live unmetered grant cases and seven guarded Codex/Claude tasks passed | [Dated evidence](project/grant-host-qualification.md); two original searches timed out at the API embedding stage and stopped without replay; fresh leave tasks passed; broader reliability and onboarding remain unqualified |
 | Codex desktop/cloud | Planned qualification | Local CLI configuration is not evidence for other surfaces |
-| ChatGPT Work | Hosted OAuth planned | Local API-key adapter cannot supply its remote authentication |
+| ChatGPT web / Personal custom-MCP plugin | Invited hosted beta: linking, guarded source-based tasks and disconnect/reconnect passed, 2026-10-03 | [Dated evidence](project/hosted-chatgpt-qualification.md); Medium effort, model version uncaptured; one initial embedding timeout stopped without replay; operator-assisted setup only |
+| ChatGPT Work / managed workspaces | Unqualified | Personal plugin QA does not establish workspace eligibility or administrator setup |
 | Claude desktop/web and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
 
 Candidate 0.1.0a3 uses published SDK 0.2.2 for authenticated current-grant

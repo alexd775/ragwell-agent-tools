@@ -8,16 +8,20 @@ your agent writes the explanation.
 expansion and a reusable Ragwell skill. Source reads passed guarded Codex and
 Claude Code tasks. The 0.1.0a3 candidate adds current-grant tool visibility and an
 unmetered connection check using published SDK 0.2.2 and the updated API. It requires
-terminal setup, a ready Ragwell project and a dedicated API key. Hosted account
-linking for ChatGPT Work and simpler onboarding
-are planned. See the [compatibility record](docs/compatibility.md) for actual test
-evidence; intended client support is not yet a certification.
+terminal setup, a ready Ragwell project and a dedicated API key.
+
+**Hosted beta:** invited testers can connect through ChatGPT web's Personal
+custom-MCP plugin flow by signing in to Ragwell and approving one project. Linking,
+cited sample tasks and disconnect/reconnect passed. This route needs no local
+package or Ragwell API key. Managed workspaces and ordinary-user onboarding
+remain unqualified. See the [compatibility record](docs/compatibility.md) for actual
+test evidence; intended client support is not yet a certification.
 
 | Your agent | Start here | Current route |
 |---|---|---|
 | Codex CLI | [Connect Codex](docs/connect/codex.md) | Local MCP and optional skill |
 | Claude Code | [Connect Claude Code](docs/connect/claude-code.md) | Local MCP and optional skill |
-| ChatGPT Work | [Hosted connection plans](docs/connect/chatgpt-work.md) | OAuth connection planned |
+| ChatGPT web / Personal | [Connect ChatGPT](docs/connect/chatgpt-work.md) | Invited beta OAuth plugin |
 | Another MCP client | [Generic setup](docs/connect/other-mcp.md) | Qualify its local transport and credential handling |
 
 Start with [the setup guide](docs/start-here.md), then try the

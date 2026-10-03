@@ -83,6 +83,25 @@ generations, invalid ranges or deletion conflicts return `source_unavailable`;
 revocation/authentication and missing scopes retain explicit failure codes. None
 of these failures returns source text or claims uncertain search charges.
 
-Both curated tools are advertised statically until machine-capability discovery
-is implemented. Visibility and a successful search do not establish source-read
-permission. The API rechecks authority on every read.
+## Current-grant discovery
+
+SDK 0.2.2 reads `GET /v1/machine/capabilities` with the process's bound key.
+Each tool listing and valid admitted invocation checks a fresh snapshot. Search
+is offered only when the configured project has `retrieval:search`; source reads
+need that scope and `document:read`, since references come from this connection's
+searches. Neither project listing nor a `project:read` grant is needed. There is
+no model-callable discovery tool or project-switch input.
+
+Snapshots must contain 1–100 unique project IDs and 1–13 unique known scopes per
+project. Empty, duplicate, oversized or incompatible responses fail as a whole.
+Discovery failure produces a sanitized MCP list error or tool failure and never
+uses a previous snapshot or advertises all tools. Grant loss/failure clears issued
+source references. This check performs no search and consumes no local search
+attempt; SDK bounded safe-read retries apply. One shared deadline covers discovery
+and the subsequent operation. Central authorization still checks every API call.
+
+Some agents cache tool lists; refresh/reconnect after changing a key or grants.
+Calls made through a cached advertisement still check current grants. A race after
+discovery is denied by the API. `ragwell-agent-tools --check` reports configured
+tool availability without a search or other-project IDs. It verifies permissions,
+not document readiness, quota availability or retrieval quality.

@@ -6,7 +6,11 @@ from types import TracebackType
 
 import httpx
 from ragwell import AsyncRagwell
-from ragwell.types import DocumentSourcePreview, SearchResponse
+from ragwell.types import (
+    DocumentSourcePreview,
+    MachineCapabilitiesResponse,
+    SearchResponse,
+)
 
 from .operations import FetchSourceInput, SearchInput
 from .settings import Settings
@@ -23,6 +27,9 @@ class SdkOperations:
             transport=transport,
         )
         self._project = self._client.project(settings.project_id)
+
+    async def capabilities(self) -> MachineCapabilitiesResponse:
+        return await self._client.capabilities.get()
 
     async def search(self, request: SearchInput) -> SearchResponse:
         return await self._project.search(query=request.query, k=request.k)

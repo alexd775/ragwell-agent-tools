@@ -32,7 +32,7 @@ ragwell-agent-tools --version
 uv tool dir --bin
 ```
 
-The version should be `0.1.0a2`. The last command shows the executable directory;
+The version should be `0.1.0a3`. The last command shows the executable directory;
 use its full `ragwell-agent-tools` path in agent configuration. This package has
 not been published to PyPI; do not substitute an unverified package with the same name.
 
@@ -64,6 +64,20 @@ The key prompt hides typing. Do not paste it into a conversation, configuration
 example, issue or Git file. These variables apply to processes launched from this
 terminal; a separately opened desktop app may not inherit them.
 
+## Check the connection without a search
+
+After supplying all three variables, run:
+
+```sh
+ragwell-agent-tools --check
+```
+
+Expect `status: ready` and `ragwell_search`. With `document:read`,
+`ragwell_fetch_source` is also listed. This reads only current grants; it makes no
+search, uploads or document changes. If it fails, follow the returned guidance
+before connecting an agent. It requires the updated beta API and SDK 0.2.2.
+Other projects granted to the same key are never offered as agent choices.
+
 ## Choose your agent and try a question
 
 Continue with [Codex](connect/codex.md), [Claude Code](connect/claude-code.md), or
@@ -76,8 +90,10 @@ Expect supporting passages and filenames with available line/page/offset referen
 Check them against the documents in Ragwell. Empty results can mean the project
 is not ready or the question needs refinement; they do not prove there is no rule.
 
-A successful test search consumes usage. The local connection advertises its tool
-before validating the key; tool discovery alone does not establish API access.
+A successful test search consumes usage. The connection checks current grants
+when listing and calling tools. Availability does not guarantee quota or service
+health, and the API authorizes each search/read again. If you change grants, your
+agent may need to refresh its tool list or restart; cached tools cannot restore access.
 
 ## Disconnect
 

@@ -17,7 +17,14 @@ from ragwell_agent_tools.sdk_operations import SdkOperations
 from ragwell_agent_tools.settings import Settings, SettingsError
 from ragwell_agent_tools.tools import SearchRuntime
 
-from .helpers import PROJECT_ID, FakeOperations, result_data, search_body, settings
+from .helpers import (
+    PROJECT_ID,
+    FakeOperations,
+    capabilities_body,
+    result_data,
+    search_body,
+    settings,
+)
 
 
 def entries(path: Path) -> list[dict[str, Any]]:
@@ -31,6 +38,8 @@ def test_api_failure_records_identity_without_values(tmp_path: Path) -> None:
         config = settings()
 
         def respond(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/v1/machine/capabilities":
+                return httpx.Response(200, json=capabilities_body())
             return httpx.Response(
                 503,
                 json={"error": {"code": "raw-code", "message": "sensitive-provider"}},

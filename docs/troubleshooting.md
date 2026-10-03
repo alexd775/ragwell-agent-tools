@@ -5,10 +5,11 @@
 | Ragwell is missing or the process cannot start | Check the full executable path and the three required environment variables. Start the agent from the same environment. |
 | `authentication_failed` | Replace an expired/revoked key in credential settings and restart. Never send the key in chat. |
 | Claude says its OAuth access token has expired, even though `/mcp` connects | Run `claude auth login` again and complete the browser sign-in. A saved login can still contain an expired provider token; this error occurs before a Ragwell search. |
-| `access_denied` | Check that the key has `retrieval:search` for the configured project. |
+| `access_denied` or no tools listed | Check that the key has `retrieval:search` for the configured project. Source reads also require `document:read`. Existing key scopes are immutable; create a replacement, update local settings and restart. |
 | `project_unavailable` | Check the configured project ID and its current availability/access in Ragwell. |
 | Successful search with no matches | Check that documents are ready and try a more specific question. |
-| Truncated result | Ask a narrower question or view the source in Ragwell. Source expansion is unavailable in this pilot. |
+| Truncated result | Ask for a bounded supporting source slice when `ragwell_fetch_source` is available, or view the source in Ragwell. |
+| `discovery_unavailable`, `discovery_timeout` or a tool-list error | Run `ragwell-agent-tools --check`. Verify API/package compatibility and connectivity. Discovery makes no search; unavailable discovery never enables tools. |
 | `quota_exceeded` | Review usage/limits in Ragwell before making further searches. |
 | `rate_limited` | Wait for the reported interval before deciding whether another search is needed. |
 | `busy` | Wait for the existing search to finish or cancel it in your agent. |

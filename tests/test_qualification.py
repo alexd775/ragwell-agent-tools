@@ -100,7 +100,8 @@ def test_real_qualifier_corpus_and_all_denials(peer: Peer) -> None:
     assert result.returncode == 0, result.stderr
     assert result.stdout.count("PASS ") == 10
     assert not result.stderr
-    assert len(peer.requests) == 10
+    assert len(peer.requests) == 6
+    assert len(peer.discovery_requests) == 11
 
 
 def test_rejected_positive_search_reports_code_and_is_not_replayed(peer: Peer) -> None:
@@ -116,4 +117,5 @@ def test_rejected_positive_search_reports_code_and_is_not_replayed(peer: Peer) -
     assert result.stderr == "FAIL leave: authentication_failed\n"
     assert "private-fixture-error" not in result.stderr
     assert "revoked-fixture" not in result.stderr
-    assert len(peer.requests) == 1
+    assert not peer.requests
+    assert len(peer.discovery_requests) == 1

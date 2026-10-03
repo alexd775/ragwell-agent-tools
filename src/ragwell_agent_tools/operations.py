@@ -6,7 +6,11 @@ from typing import Protocol
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from ragwell.types import DocumentSourcePreview, SearchResponse
+from ragwell.types import (
+    DocumentSourcePreview,
+    MachineCapabilitiesResponse,
+    SearchResponse,
+)
 
 
 class SearchInput(BaseModel):
@@ -58,6 +62,10 @@ class FetchSourceInput(BaseModel):
 
 
 class SearchOperations(Protocol):
+    async def capabilities(self) -> MachineCapabilitiesResponse:
+        """Read the current key's grants without searching or broadening authority."""
+        ...
+
     async def search(self, request: SearchInput) -> SearchResponse:
         """Perform exactly one search under the configured authority."""
         ...

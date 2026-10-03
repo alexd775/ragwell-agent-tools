@@ -60,6 +60,8 @@ FAILURE_CODES = frozenset(
         "invalid_response",
         "api_unavailable",
         "search_failed",
+        "discovery_timeout",
+        "discovery_unavailable",
     }
 )
 

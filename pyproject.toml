@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ragwell-agent-tools"
-version = "0.1.0a2"
+version = "0.1.0a3"
 description = "Evidence search tools and workflows for agents using Ragwell"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,7 +13,7 @@ license-files = ["LICENSE"]
 dependencies = [
     "mcp==2.2.0",
     "pydantic>=2.12,<3",
-    "ragwell>=0.2.0,<0.3",
+    "ragwell>=0.2.2,<0.3",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

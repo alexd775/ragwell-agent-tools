@@ -20,6 +20,7 @@ from ragwell_agent_tools import __version__
 
 from .helpers import (
     PROJECT_ID,
+    capabilities_body,
     platform_environment,
     result_data,
     search_body,
@@ -34,6 +35,7 @@ class Peer:
     requests: list[dict[str, Any]] = field(default_factory=list)
     filenames: dict[str, str] = field(default_factory=dict)
     nullable_scores: bool = False
+    discovery_requests: list[str] = field(default_factory=list)
 
 
 @pytest.fixture
@@ -45,6 +47,30 @@ def peer() -> Iterator[Peer]:
             pass
 
         def do_GET(self) -> None:
+            if self.path == "/v1/machine/capabilities":
+                value.discovery_requests.append(self.path)
+                authority = self.headers.get("Authorization", "")
+                status = 200
+                payload = capabilities_body()
+                if authority in {"Bearer revoked-fixture", "Bearer expired-fixture"}:
+                    status = 401
+                    payload = {
+                        "error": {
+                            "code": "fixture_rejected",
+                            "message": "private-fixture-error",
+                        }
+                    }
+                elif authority == "Bearer scope-fixture":
+                    payload = capabilities_body(scopes=["project:read"])
+                elif authority == "Bearer foreign-fixture":
+                    payload = capabilities_body(project_id=PROJECT_ID.__class__(int=99))
+                encoded = json.dumps(payload).encode("utf-8")
+                self.send_response(status)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(encoded)))
+                self.end_headers()
+                self.wfile.write(encoded)
+                return
             value.requests.append({"path": self.path, "body": None})
             encoded = json.dumps(source_body()).encode("utf-8")
             self.send_response(200)
@@ -157,6 +183,7 @@ def test_real_stdio_handshake_search_and_clean_shutdown(
 
     asyncio.run(scenario())
     assert len(peer.requests) == 2
+    assert len(peer.discovery_requests) == 3
     assert peer.requests[0]["body"] == {"query": "How do I request travel?", "k": 1}
     captured = capfd.readouterr()
     assert captured.out == ""
@@ -215,7 +242,13 @@ def test_stdio_denials_do_not_retry_or_disclose_peer_messages(
             assert key not in result.model_dump_json()
 
     asyncio.run(scenario())
-    assert len(peer.requests) == 1
+    assert len(peer.requests) == (
+        0
+        if key
+        in {"revoked-fixture", "expired-fixture", "scope-fixture", "foreign-fixture"}
+        else 1
+    )
+    assert len(peer.discovery_requests) == 1
     captured = capfd.readouterr()
     assert captured.out == ""
     assert captured.err == ""
@@ -281,3 +314,39 @@ def test_version_command_needs_no_key(tmp_path: Path) -> None:
     assert result.returncode == 0
     assert result.stdout.strip() == __version__
     assert not result.stderr
+
+
+@pytest.mark.parametrize(
+    "key,expected",
+    [("success-fixture", 0), ("scope-fixture", 1), ("revoked-fixture", 1)],
+)
+def test_unmetered_connection_check(
+    peer: Peer, tmp_path: Path, key: str, expected: int
+) -> None:
+    result = subprocess.run(
+        [sys.executable, "-m", "ragwell_agent_tools.stdio", "--check"],
+        env=platform_environment(
+            RAGWELL_BASE_URL=peer.origin,
+            RAGWELL_PROJECT_ID=str(PROJECT_ID),
+            RAGWELL_API_KEY=key,
+            RAGWELL_ALLOW_LOCAL_HTTP="true",
+        ),
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    assert result.returncode == expected
+    assert not result.stderr
+    data = json.loads(result.stdout)
+    if expected == 0:
+        assert data == {
+            "status": "ready",
+            "tools": ["ragwell_fetch_source", "ragwell_search"],
+            "searches": 0,
+        }
+    else:
+        assert data["code"] in {"access_denied", "authentication_failed"}
+    assert not peer.requests
+    assert len(peer.discovery_requests) == 1
+    assert key not in result.stdout

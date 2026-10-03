@@ -22,6 +22,7 @@ from .helpers import (
     PROJECT_ID,
     SOURCE_ID,
     FakeOperations,
+    capabilities_body,
     result_data,
     search_body,
     settings,
@@ -83,6 +84,8 @@ def test_search_without_generation_remains_usable_but_cannot_expand() -> None:
         calls: list[httpx.Request] = []
 
         def respond(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/v1/machine/capabilities":
+                return httpx.Response(200, json=capabilities_body())
             calls.append(request)
             return httpx.Response(200, json=body)
 
@@ -180,6 +183,8 @@ def test_mcp_search_then_source_uses_only_published_sdk_and_fixed_project() -> N
         calls: list[httpx.Request] = []
 
         def respond(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/v1/machine/capabilities":
+                return httpx.Response(200, json=capabilities_body())
             calls.append(request)
             assert (
                 request.headers["Authorization"] == "Bearer synthetic-test-credential"
@@ -233,6 +238,8 @@ def test_source_access_loss_and_deletion_fail_without_content(
         calls: list[httpx.Request] = []
 
         def respond(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/v1/machine/capabilities":
+                return httpx.Response(200, json=capabilities_body())
             calls.append(request)
             if request.method == "POST":
                 return httpx.Response(200, json=search_body())

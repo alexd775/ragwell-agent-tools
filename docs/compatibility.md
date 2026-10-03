@@ -21,8 +21,9 @@ release are omitted until deliberately projected, so searches keep working.
 | ChatGPT Work | Hosted OAuth planned | Local API-key adapter cannot supply its remote authentication |
 | Claude desktop/web and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
 
-Tool discovery does not authenticate a key. Fixed search/source advertising is
-deliberate until machine capabilities discovery exists. Keys must carry current
+Candidate 0.1.0a3 uses published SDK 0.2.2 for authenticated current-grant
+discovery and an unmetered `--check`. Earlier 0.1.0a1/a2 qualifications below do
+not establish this candidate's host behavior. Keys must carry current
 `retrieval:search` grants for the configured project. Source expansion additionally
 requires `document:read` and the updated generation/source identity contract.
 The new 0.1.0a2 source-fetch candidate has separate deterministic qualification;

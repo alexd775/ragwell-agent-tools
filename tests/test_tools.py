@@ -14,7 +14,14 @@ from ragwell_agent_tools.operations import FetchSourceInput, SearchInput
 from ragwell_agent_tools.sdk_operations import SdkOperations
 from ragwell_agent_tools.tools import SearchRuntime, build_server
 
-from .helpers import PROJECT_ID, FakeOperations, result_data, search_body, settings
+from .helpers import (
+    PROJECT_ID,
+    FakeOperations,
+    capabilities_body,
+    result_data,
+    search_body,
+    settings,
+)
 
 
 @pytest.mark.parametrize(
@@ -68,6 +75,8 @@ def test_http_errors_are_sanitized_and_search_is_never_replayed(
         config = settings()
 
         def respond(request: httpx.Request) -> httpx.Response:
+            if request.url.path == "/v1/machine/capabilities":
+                return httpx.Response(200, json=capabilities_body())
             calls.append(request)
             assert request.url.path == f"/v1/projects/{PROJECT_ID}/search"
             assert request.headers["Authorization"] == f"Bearer {config.api_key}"
@@ -121,7 +130,7 @@ def test_cancellation_busy_and_deadline_release_owned_admission() -> None:
         started = asyncio.Event()
         cancelled = asyncio.Event()
 
-        class BlockingOperations:
+        class BlockingOperations(FakeOperations):
             async def fetch_source(
                 self, request: FetchSourceInput
             ) -> DocumentSourcePreview:

@@ -5,9 +5,9 @@ you can check against the original sources. Ragwell retrieves relevant passages;
 your agent writes the explanation.
 
 **Local early access:** the local adapter provides MCP search, bounded source
-expansion and a reusable Ragwell skill. The earlier search pilot passed guarded
-Codex and Claude Code tasks; source expansion is a new candidate requiring an
-updated API and separate live qualification. It requires
+expansion and a reusable Ragwell skill. Source reads passed guarded Codex and
+Claude Code tasks. The 0.1.0a3 candidate adds current-grant tool visibility and an
+unmetered connection check using published SDK 0.2.2 and the updated API. It requires
 terminal setup, a ready Ragwell project and a dedicated API key. Hosted account
 linking for ChatGPT Work and simpler onboarding
 are planned. See the [compatibility record](docs/compatibility.md) for actual test

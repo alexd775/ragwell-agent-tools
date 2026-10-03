@@ -7,7 +7,11 @@ from typing import Any
 from uuid import UUID
 
 from mcp.types import CallToolResult
-from ragwell.types import DocumentSourcePreview, SearchResponse
+from ragwell.types import (
+    DocumentSourcePreview,
+    MachineCapabilitiesResponse,
+    SearchResponse,
+)
 
 from ragwell_agent_tools.operations import FetchSourceInput, SearchInput
 from ragwell_agent_tools.settings import Settings
@@ -94,6 +98,17 @@ class FakeOperations:
         self.requests: list[SearchInput] = []
         self.error: Exception | None = None
         self.source_requests: list[FetchSourceInput] = []
+        self.capability_response = MachineCapabilitiesResponse.from_dict(
+            capabilities_body()
+        )
+        self.capability_error: Exception | None = None
+        self.capability_calls = 0
+
+    async def capabilities(self) -> MachineCapabilitiesResponse:
+        self.capability_calls += 1
+        if self.capability_error is not None:
+            raise self.capability_error
+        return self.capability_response
 
     async def search(self, request: SearchInput) -> SearchResponse:
         self.requests.append(request)
@@ -132,4 +147,19 @@ def source_arguments(**overrides: Any) -> dict[str, Any]:
         "generation_id": str(GENERATION_ID),
         "source_id": str(SOURCE_ID),
         **overrides,
+    }
+
+
+def capabilities_body(
+    *, project_id: UUID = PROJECT_ID, scopes: list[str] | None = None
+) -> dict[str, Any]:
+    return {
+        "projects": [
+            {
+                "project_id": str(project_id),
+                "scopes": scopes
+                if scopes is not None
+                else ["document:read", "retrieval:search"],
+            }
+        ]
     }

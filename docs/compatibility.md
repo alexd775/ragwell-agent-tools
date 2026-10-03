@@ -20,9 +20,12 @@ release are omitted until deliberately projected, so searches keep working.
 | ChatGPT Work | Hosted OAuth planned | Local API-key adapter cannot supply its remote authentication |
 | Claude desktop/web and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
 
-Tool discovery does not authenticate a key. Fixed search-only advertising is
+Tool discovery does not authenticate a key. Fixed search/source advertising is
 deliberate until machine capabilities discovery exists. Keys must carry current
-`retrieval:search` grants for the configured project.
+`retrieval:search` grants for the configured project. Source expansion additionally
+requires `document:read` and the updated generation/source identity contract.
+The new 0.1.0a2 source-fetch candidate has separate deterministic qualification;
+the earlier Codex/Claude task evidence applies to the search-only 0.1.0a1 pilot.
 
 The package has not been published to PyPI or submitted to an agent directory.
 An installable source artifact, public listing and qualified account/workspace

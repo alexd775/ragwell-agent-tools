@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from typing import Protocol
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-from ragwell.types import SearchResponse
+from ragwell.types import DocumentSourcePreview, SearchResponse
 
 
 class SearchInput(BaseModel):
@@ -22,7 +23,45 @@ class SearchInput(BaseModel):
         return value
 
 
+class FetchSourceInput(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True, hide_input_in_errors=True)
+
+    document_id: UUID
+    document_version_id: UUID
+    generation_id: UUID
+    source_id: UUID
+    offset: int = Field(default=0, ge=0, le=2_147_483_646)
+    limit: int = Field(default=1_500, ge=1, le=4_000)
+
+    @field_validator(
+        "document_id",
+        "document_version_id",
+        "generation_id",
+        "source_id",
+        mode="before",
+    )
+    @classmethod
+    def parse_identity(cls, value: object) -> UUID:
+        if isinstance(value, UUID):
+            return value
+        if isinstance(value, str):
+            return UUID(value)
+        raise ValueError("source identities must be UUIDs")
+
+    def reference(self) -> tuple[UUID, UUID, UUID, UUID]:
+        return (
+            self.document_id,
+            self.document_version_id,
+            self.generation_id,
+            self.source_id,
+        )
+
+
 class SearchOperations(Protocol):
     async def search(self, request: SearchInput) -> SearchResponse:
         """Perform exactly one search under the configured authority."""
+        ...
+
+    async def fetch_source(self, request: FetchSourceInput) -> DocumentSourcePreview:
+        """Read one bounded source slice under the configured authority."""
         ...

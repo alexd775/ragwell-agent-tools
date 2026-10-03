@@ -6,9 +6,9 @@ from types import TracebackType
 
 import httpx
 from ragwell import AsyncRagwell
-from ragwell.types import SearchResponse
+from ragwell.types import DocumentSourcePreview, SearchResponse
 
-from .operations import SearchInput
+from .operations import FetchSourceInput, SearchInput
 from .settings import Settings
 
 
@@ -26,6 +26,15 @@ class SdkOperations:
 
     async def search(self, request: SearchInput) -> SearchResponse:
         return await self._project.search(query=request.query, k=request.k)
+
+    async def fetch_source(self, request: FetchSourceInput) -> DocumentSourcePreview:
+        return await self._project.documents.sources.get(
+            request.document_id,
+            request.generation_id,
+            request.source_id,
+            offset=request.offset,
+            limit=request.limit,
+        )
 
     async def __aenter__(self) -> SdkOperations:
         return self

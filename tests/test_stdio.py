@@ -16,7 +16,16 @@ from typing import Any
 import pytest
 from mcp import Client, StdioServerParameters
 
-from .helpers import PROJECT_ID, platform_environment, result_data, search_body
+from ragwell_agent_tools import __version__
+
+from .helpers import (
+    PROJECT_ID,
+    platform_environment,
+    result_data,
+    search_body,
+    source_arguments,
+    source_body,
+)
 
 
 @dataclass
@@ -34,6 +43,15 @@ def peer() -> Iterator[Peer]:
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, format: str, *args: object) -> None:
             pass
+
+        def do_GET(self) -> None:
+            value.requests.append({"path": self.path, "body": None})
+            encoded = json.dumps(source_body()).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(encoded)))
+            self.end_headers()
+            self.wfile.write(encoded)
 
         def do_POST(self) -> None:
             request = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
@@ -116,7 +134,10 @@ def test_real_stdio_handshake_search_and_clean_shutdown(
                 "2025-11-25" if mode == "legacy" else "2026-07-28"
             )
             listed = await client.list_tools()
-            assert [t.name for t in listed.tools] == ["ragwell_search"]
+            assert [t.name for t in listed.tools] == [
+                "ragwell_search",
+                "ragwell_fetch_source",
+            ]
             result = await client.call_tool(
                 "ragwell_search", {"query": "How do I request travel?", "k": 1}
             )
@@ -125,6 +146,9 @@ def test_real_stdio_handshake_search_and_clean_shutdown(
                 result_data(result)["matches"][0]["source_filename"]
                 == "travel-policy.md"
             )
+            source = await client.call_tool("ragwell_fetch_source", source_arguments())
+            assert not source.is_error
+            assert result_data(source)["content"] == source_body()["content"]
             invalid = await client.call_tool(
                 "ragwell_search",
                 {"query": "private-invalid-query", "project_id": "foreign"},
@@ -132,7 +156,7 @@ def test_real_stdio_handshake_search_and_clean_shutdown(
             assert invalid.is_error
 
     asyncio.run(scenario())
-    assert len(peer.requests) == 1
+    assert len(peer.requests) == 2
     assert peer.requests[0]["body"] == {"query": "How do I request travel?", "k": 1}
     captured = capfd.readouterr()
     assert captured.out == ""
@@ -255,5 +279,5 @@ def test_version_command_needs_no_key(tmp_path: Path) -> None:
         timeout=5,
     )
     assert result.returncode == 0
-    assert result.stdout.strip() == "0.1.0a1"
+    assert result.stdout.strip() == __version__
     assert not result.stderr

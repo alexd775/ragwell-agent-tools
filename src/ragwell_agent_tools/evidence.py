@@ -60,6 +60,7 @@ class EvidenceMatch(OutputModel):
     chunk_id: UUID
     document_id: UUID
     document_version_id: UUID
+    generation_id: UUID | None = None
     source_filename: str = Field(max_length=1_024)
     representation_version: str = Field(max_length=128)
     scores: Scores
@@ -79,7 +80,7 @@ class SearchEvidence(OutputModel):
     omitted_matches: int = 0
     truncated: bool = False
     source_text_is_untrusted: Literal[True] = True
-    source_expansion_available: Literal[False] = False
+    source_expansion_available: bool = False
 
 
 def as_tool_result(payload: BaseModel, *, is_error: bool = False) -> CallToolResult:
@@ -142,6 +143,8 @@ def project_evidence(
             chunk_id=hit.chunk_id,
             document_id=hit.document_id,
             document_version_id=hit.document_version_id,
+            # Published SDK 0.2.0 preserves additive contract fields in to_dict().
+            generation_id=hit.to_dict().get("generation_id"),
             source_filename=hit.source_filename,
             representation_version=hit.representation_version,
             scores=scores,
@@ -161,7 +164,7 @@ def project_evidence(
         truncated=len(response.items) > len(matches)
         or any(m.truncated for m in matches),
     )
-    while result_bytes(result := as_tool_result(output)) > max_output_bytes:
+    while result_bytes(as_tool_result(output)) > max_output_bytes:
         output.truncated = True
         candidates = [(len(p.text), m, p) for m in output.matches for p in m.parts]
         longest = max(candidates, key=lambda item: item[0], default=None)
@@ -175,4 +178,9 @@ def project_evidence(
             output.omitted_matches += 1
         else:
             raise ValueError("Evidence metadata exceeds the configured output budget")
-    return result
+    output.source_expansion_available = any(
+        match.generation_id is not None and any(p.source_id for p in match.parts)
+        for match in output.matches
+    )
+    # Re-render after the capability flag changes (true is smaller than false).
+    return as_tool_result(output)

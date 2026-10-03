@@ -8,9 +8,9 @@ import jsonschema
 import pytest
 from mcp import Client
 from pydantic import ValidationError as ModelValidationError
-from ragwell.types import SearchResponse
+from ragwell.types import DocumentSourcePreview, SearchResponse
 
-from ragwell_agent_tools.operations import SearchInput
+from ragwell_agent_tools.operations import FetchSourceInput, SearchInput
 from ragwell_agent_tools.sdk_operations import SdkOperations
 from ragwell_agent_tools.tools import SearchRuntime, build_server
 
@@ -122,6 +122,11 @@ def test_cancellation_busy_and_deadline_release_owned_admission() -> None:
         cancelled = asyncio.Event()
 
         class BlockingOperations:
+            async def fetch_source(
+                self, request: FetchSourceInput
+            ) -> DocumentSourcePreview:
+                raise AssertionError("unexpected source read")
+
             async def search(self, request: SearchInput) -> SearchResponse:
                 started.set()
                 try:
@@ -154,7 +159,10 @@ def test_mcp_client_discovers_only_curated_tool_and_receives_evidence() -> None:
         operations = FakeOperations()
         async with Client(build_server(settings(), operations)) as client:
             listed = await client.list_tools()
-            assert [tool.name for tool in listed.tools] == ["ragwell_search"]
+            assert [tool.name for tool in listed.tools] == [
+                "ragwell_search",
+                "ragwell_fetch_source",
+            ]
             tool = listed.tools[0]
             assert tool.input_schema["additionalProperties"] is False
             assert "project_id" not in tool.input_schema["properties"]

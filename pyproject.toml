@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ragwell-agent-tools"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "Evidence search tools and workflows for agents using Ragwell"
 readme = "README.md"
 requires-python = ">=3.11"

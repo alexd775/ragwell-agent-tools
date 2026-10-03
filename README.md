@@ -4,9 +4,10 @@ Ask your agent questions about documents in your Ragwell project and get evidenc
 you can check against the original sources. Ragwell retrieves relevant passages;
 your agent writes the explanation.
 
-**Local early access:** this first pilot provides one read-only MCP search tool and
-a reusable Ragwell skill. The installed package passed 74 tests on Python 3.11–3.14
-on macOS; real agent tasks and live beta access checks remain pending. It requires
+**Local early access:** the local adapter provides MCP search, bounded source
+expansion and a reusable Ragwell skill. The earlier search pilot passed guarded
+Codex and Claude Code tasks; source expansion is a new candidate requiring an
+updated API and separate live qualification. It requires
 terminal setup, a ready Ragwell project and a dedicated API key. Hosted account
 linking for ChatGPT Work and simpler onboarding
 are planned. See the [compatibility record](docs/compatibility.md) for actual test
@@ -22,7 +23,9 @@ evidence; intended client support is not yet a certification.
 Start with [the setup guide](docs/start-here.md), then try the
 [sample questions](examples/workflows/README.md). You can ask how a process works,
 compare policies, or consult decisions before making a change. The pilot cannot
-upload/delete documents, fetch additional source text, or switch projects.
+upload/delete documents or switch projects. With `document:read`, the agent can
+read additional context from a source returned by search, keeping its exact
+document version and index generation.
 
 Keys belong in agent environment/credential settings, never chat. Searches consume
 Ragwell usage and returned text reaches your chosen agent provider. The API checks

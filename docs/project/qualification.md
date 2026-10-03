@@ -207,6 +207,14 @@ adapter gates. Reproduce relevant live failures through a deliberately prepared
 test environment before advertising broader service reliability; do not claim a
 tiny arbitrary deadline proves live cancellation/refund behavior.
 
+## Source expansion candidate — 2026-10-02
+
+Candidate 0.1.0a2 has separate [source-expansion evidence](source-expansion.md):
+112 source/installed-wheel tests, published SDK 0.2.0 qualification across Python
+3.11–3.14 on macOS, and an independent installed SDK 0.2.1 candidate check.
+This does not extend the earlier search-only host certification. Live expanded
+Codex/Claude tasks require the updated beta API before qualification.
+
 ## Real agent tasks
 
 For Codex CLI and Claude Code, use a clean installed artifact and each public

@@ -38,9 +38,22 @@ into one rule.
 
 Results can be truncated or empty. Check the result, match and part truncation flags
 and `omitted_matches`/`omitted_parts`. Do not imply that an abbreviated result is a
-complete document or proves absence. This pilot cannot fetch more source text or
-switch projects; explain that limitation and suggest a narrower question or viewing
-the document in Ragwell when more context is needed.
+complete document or proves absence.
+
+When a specific claim needs additional context and `source_expansion_available` is
+true, use `ragwell_fetch_source` with the match's document/version/generation IDs
+and the supporting part's source ID. Copy these IDs exactly; never guess another
+generation or source. Start at the part's returned source offset, or zero when
+earlier context is needed. Use the default 1500-character limit unless a specific
+gap requires more; the maximum is 4000. Normally use no more than three source
+reads per question. Do not page through an entire document. Cite the filename from
+the original match and the exact offsets/page returned by the source tool; do not
+invent line numbers. Check `truncated` and `next_offset` before claiming completeness.
+Source reads require `document:read` in addition to the search permission and do
+not consume search usage. Visible tools or usable references do not prove access.
+If expansion is unavailable, denied or its generation was removed, explain the
+gap and suggest viewing the document in Ragwell. Do not substitute a different
+version. This connection cannot switch projects.
 
 For authentication or access errors, direct the user to their Ragwell/agent
 connection settings. Never ask them to paste an API key into chat. For quota or

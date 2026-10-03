@@ -33,11 +33,13 @@ Search needs generation-safe source references; machine discovery must expose on
 current effective scopes and granted projects. Every invocation remains authorized
 even when a tool is visible. Do not expose the entire REST API or bulk exports.
 
-The initial code assessment found a bounded source-inspection endpoint and persisted
-generation IDs, but search projections currently omit the generation ID. Carry it
-through search before adding `ragwell_fetch_source`; no backend behavior has changed
-in this assessment. Backend-owned contract and discovery-policy work is the next
-implementation step.
+The first source slice is implemented in candidate 0.1.0a2: search projects exact
+generation identity, and `ragwell_fetch_source` expands only issued references
+through the published SDK's existing bounded reader. The updated API returns
+source document/version identity, which the adapter verifies before disclosing
+text. No migration is needed. See [source qualification](source-expansion.md).
+Capability policy/discovery, grant-based visibility, installation assistance and
+real expanded host tasks remain outstanding; this stage remains active.
 
 Link API/OpenAPI changes, generated SDK/dashboard updates, any migrations, tool
 changes and relevant tenant/reindex/delete/golden gates in one delivery record.

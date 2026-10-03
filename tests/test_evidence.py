@@ -10,7 +10,7 @@ from ragwell.types import ChunkPart, SearchResponse
 
 from ragwell_agent_tools.evidence import project_evidence, result_bytes
 
-from .helpers import PROJECT_ID, result_data, search_body
+from .helpers import GENERATION_ID, PROJECT_ID, result_data, search_body
 
 
 def test_multipart_evidence_is_not_duplicated_or_relabelled() -> None:
@@ -21,13 +21,13 @@ def test_multipart_evidence_is_not_duplicated_or_relabelled() -> None:
     data = result_data(output)
     hit = data["matches"][0]
     assert "content" not in hit
-    assert "generation_id" not in hit
+    assert hit["generation_id"] == str(GENERATION_ID)
     assert "url" not in hit
     assert [p["kind"] for p in hit["parts"]] == ["context", "separator", "evidence"]
     assert hit["parts"][2]["start_line"] == 3
     assert hit["parts"][2]["span"]["start_offset"] == 18
     assert hit["document_version_id"] == str(response.items[0].document_version_id)
-    assert data["source_expansion_available"] is False
+    assert data["source_expansion_available"] is True
     assert data["truncated"] is False
     assert isinstance(output.content[0], TextContent)
     assert json.loads(output.content[0].text) == data

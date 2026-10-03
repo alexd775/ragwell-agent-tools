@@ -16,6 +16,11 @@ the project ID and the API origin provided for your beta environment. The API
 origin is the service address, not the dashboard page URL or a `/v1` endpoint.
 Keep the key in your credential settings and give it a useful name and expiry.
 
+To let the agent read more surrounding text when a passage is unclear, also grant
+**`document:read`**. Search alone works without it. Source expansion requires the
+updated beta API; if the result says expansion is unavailable, use the passages
+already returned or open the document in Ragwell.
+
 ## Install the local tool
 
 Use Python 3.11 or newer and [uv](https://docs.astral.sh/uv/getting-started/installation/).
@@ -27,7 +32,7 @@ ragwell-agent-tools --version
 uv tool dir --bin
 ```
 
-The version should be `0.1.0a1`. The last command shows the executable directory;
+The version should be `0.1.0a2`. The last command shows the executable directory;
 use its full `ragwell-agent-tools` path in agent configuration. This package has
 not been published to PyPI; do not substitute an unverified package with the same name.
 

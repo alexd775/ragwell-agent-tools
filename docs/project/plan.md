@@ -63,7 +63,20 @@ changes and relevant tenant/reindex/delete/golden gates in one delivery record.
 Add dashboard installation help and public guide publishing without coupling
 repository builds or duplicating the SDK's generator.
 
-## Hosted account linking planned
+## Hosted account linking active — live qualification pending
+
+On 2026-10-03 Alex selected implementation. The private API/dashboard supply
+user-bound one-project consent, predefined public-client S256 PKCE, hashed opaque
+credentials with rotation/replay invalidation, current authority checks,
+stateless hosted MCP, isolated source references and disconnect/security cleanup.
+The feature is disabled by default pending deployment, exact client configuration
+and live host tasks. Public tools exports canonical definitions at
+`f0d2f3d1e7993c01fcd36980e42a23a232c40ef2`; source and independently installed wheel
+qualification each passed 131 tests. The beta candidate remains unpublished.
+
+The implementation selects the monolith topology and user-owned grants described
+below. Earlier design questions are resolved for this beta; live interoperability,
+operations/privacy activation and ordinary-user evidence remain outstanding.
 
 Accept an OAuth grant/identity and deployment ADR first. Reuse tool schemas and
 formatting through centrally authorized operations; the public package never

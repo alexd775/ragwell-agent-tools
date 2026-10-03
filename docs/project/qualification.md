@@ -235,3 +235,15 @@ Do not change a user's global agent configuration or disclose existing secrets t
 perform qualification. Use isolated test configuration or an explicitly selected
 user session. Ordinary-user onboarding is a later hosted-stage gate; this local
 terminal pilot cannot satisfy it.
+
+
+## Hosted transport definition extraction, 2026-10-03
+
+Immutable source `f0d2f3d1e7993c01fcd36980e42a23a232c40ef2` exports canonical tool
+definitions for the separately owned hosted backend transport. Local handlers
+still filter those definitions by current grants. Ruff, strict typing and 131
+source tests passed. The independent wheel/sdist built; fresh Python 3.12.14
+installation outside the checkout passed all 131 tests and verified its import
+origin. No package publication or new live hosted client qualification is claimed.
+OAuth and hosted grants remain backend responsibilities; this public repository
+contains no backend imports, database access or hosted customer credentials.

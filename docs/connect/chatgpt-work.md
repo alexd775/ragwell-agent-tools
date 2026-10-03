@@ -1,16 +1,29 @@
 # Ragwell in ChatGPT Work
 
-Hosted account linking is planned and is not available in this local pilot. Do not
-paste a Ragwell key into a chat or assume a local Codex connection configures Work.
+Hosted account linking is implemented for beta qualification but is not enabled
+or user-qualified yet. This guide describes the coming connection flow; it is not
+a claim that Ragwell is currently installable in ChatGPT Work. Keep your Ragwell
+API key out of chat. Local Codex setup does not configure Work.
 
-The intended flow is: choose Ragwell, sign in on Ragwell, select permitted projects
-and read access, approve the connection, and return to your agent. You will be able
-to review and revoke the connection from Ragwell.
+Once an invited hosted connection is enabled, you will:
 
-OpenAI's authenticated remote plugins use OAuth and cannot present a custom
-Ragwell API key. Account/workspace eligibility and any administrator approval also
-need qualification. [Plugin authentication](https://developers.openai.com/plugins/build/auth).
+1. Add Ragwell using the beta connection supplied with your invitation.
+2. Sign in on Ragwell, select one project and review the requested read access.
+3. Approve the connection and return to your agent.
+4. Ask a question from the [sample workflows](../../examples/workflows/README.md)
+   and check its source citations.
 
-The [delivery plan](../project/plan.md) tracks authorization design, hosted MCP,
-privacy/operations checks and nontechnical onboarding before this guide becomes
-an installation guide.
+Your agent provider receives retrieved text and citations. Searches use your
+workspace allowance. A connection lasts up to 30 days; review and disconnect it
+in Ragwell's **Agent connections** page. Disconnecting prevents future access;
+it cannot remove text your provider already received. Reconnecting requires
+another approval. Use only the synthetic beta documents.
+
+OpenAI's authenticated remote plugins use OAuth rather than a custom Ragwell API
+key. This beta uses predefined public clients with exact callbacks, so the
+maintainer prepares the connection before inviting testers. Account/workspace
+eligibility and administrator requirements still need live qualification.
+[Plugin authentication](https://developers.openai.com/plugins/build/auth).
+
+The [delivery plan](../project/plan.md) tracks live linking, privacy/operations
+checks and user testing before this becomes a fully verified installation guide.

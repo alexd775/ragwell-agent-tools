@@ -63,7 +63,7 @@ changes and relevant tenant/reindex/delete/golden gates in one delivery record.
 Add dashboard installation help and public guide publishing without coupling
 repository builds or duplicating the SDK's generator.
 
-## Hosted account linking active — ChatGPT Personal pilot passed
+## Hosted account linking active — ChatGPT Personal and Claude web pilots passed
 
 On 2026-10-03 Alex selected implementation. The private API/dashboard supply
 user-bound one-project consent, predefined public-client S256 PKCE, hashed opaque
@@ -80,6 +80,11 @@ below. ChatGPT web's Personal custom-MCP plugin flow passed approved one-project
 linking, three cited workflows, a guarded hostile fixture and disconnect/reconnect
 on 2026-10-03. The initial embedding timeout stopped without replay and remains an
 accepted beta limitation. See [dated hosted evidence](hosted-chatgpt-qualification.md).
+The approved Claude web Free personal / Sonnet 5.5 Medium pilot also passed three
+cited workflows/source reads, a guarded hostile fixture and disconnect/reconnect.
+Two initial embedding timeouts stopped without replay; successful tasks used
+preloaded tools after one lazy-loading interruption. See
+[Claude evidence](hosted-claude-qualification.md).
 Other hosted surfaces, live parallel-user/access-loss and operational containment
 qualification remain outstanding; ordinary-user usability is a later gate.
 

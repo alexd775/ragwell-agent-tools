@@ -25,10 +25,10 @@ public docs site rather than diverging into independently edited copies.
 Use a dedicated API key for local agents. Hosted ChatGPT plugins use OAuth account
 linking; a raw Ragwell key cannot be supplied through the documented remote-plugin
 authentication. The accepted beta design uses user-bound grants, one-project
-consent and current membership checks. The Personal custom-MCP flow now passed
-guarded live tasks and disconnect/reconnect; managed workspaces and other hosted
-surfaces require their own qualification. Existing organization-owned service accounts keep
-their separate lifecycle.
+consent and current membership checks. The Personal custom-MCP flow and Claude web
+Free personal pilot passed guarded live tasks/source reads and disconnect/reconnect.
+Managed workspaces and other hosted surfaces require their own qualification.
+Existing organization-owned service accounts keep their separate lifecycle.
 [OpenAI authentication](https://developers.openai.com/plugins/build/auth).
 
 ## Workflows and stages

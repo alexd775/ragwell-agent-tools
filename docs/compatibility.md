@@ -21,7 +21,8 @@ release are omitted until deliberately projected, so searches keep working.
 | Codex desktop/cloud | Planned qualification | Local CLI configuration is not evidence for other surfaces |
 | ChatGPT web / Personal custom-MCP plugin | Invited hosted beta: linking, guarded source-based tasks and disconnect/reconnect passed, 2026-10-03 | [Dated evidence](project/hosted-chatgpt-qualification.md); Medium effort, model version uncaptured; one initial embedding timeout stopped without replay; operator-assisted setup only |
 | ChatGPT Work / managed workspaces | Unqualified | Personal plugin QA does not establish workspace eligibility or administrator setup |
-| Claude desktop/web and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
+| Claude web / Free personal / Chat / Sonnet 5.5 Medium | Invited hosted beta: three cited workflows/source reads and disconnect/reconnect passed, 2026-10-03 | [Dated evidence](project/hosted-claude-qualification.md); two initial embedding timeouts stopped without replay; one lazy-tool-loading interruption, successful tasks in preloaded mode; operator-assisted setup only |
+| Claude desktop, Cowork and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
 
 Candidate 0.1.0a3 uses published SDK 0.2.2 for authenticated current-grant
 discovery and an unmetered `--check`, with its own dated qualification above.

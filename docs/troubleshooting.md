@@ -11,6 +11,16 @@
 | ChatGPT asks to reconnect | Check Ragwell's **Agent connections**. If disconnected or expired, reconnect from the plugin and approve the intended project/read access again. |
 | A search reports an embedding timeout | Stop; usage may have been recorded. Deployment warm-up is an accepted beta limitation. Decide deliberately whether a separate new attempt is needed; never automatically replay. |
 
+## Hosted Claude web beta
+
+| What you see | What to do |
+|---|---|
+| Custom connector setup is unavailable | Follow the [Claude web guide](connect/claude-web.md) and check beta/account eligibility with the maintainer. Claude Code login does not sign in the web app. |
+| Discovery fails or another callback is shown | Check the exact beta URL and predefined client ID. Keep the client secret empty; do not guess callbacks. |
+| Ragwell is enabled but Claude finds no tools | In **+ → Connectors → Tool access**, try **Tools already loaded**, then start a fresh bounded task. The pilot observed a lazy-loading interruption. This changes tool loading, not Ragwell permissions. |
+| Authentication required or connection expired | Check **Agent connections** in Ragwell. Open the Claude connector and choose **Reconnect**, then approve the intended project/read access again. |
+| A search reports an embedding timeout | Stop; usage may have been recorded. Decide deliberately about a separate new attempt; never automatically replay. |
+
 ## Local agents
 
 | What you see | What to do |

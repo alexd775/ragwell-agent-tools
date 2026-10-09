@@ -47,11 +47,14 @@ dev = [
 [tool.uv]
 required-version = "==0.12.17"
 
+[tool.hatch.build]
+exclude = ["/private", "/docs/project"]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/ragwell_agent_tools"]
 
 [tool.hatch.build.targets.sdist]
-include = ["/src", "/tests", "/scripts", "/skills", "/integrations", "/docs", "/examples", "/.github", "/AGENTS.md", "/CONTRIBUTING.md", "/SECURITY.md", "/LICENSE", "/README.md", "/pyproject.toml", "/uv.lock"]
+include = ["/src", "/tests", "/scripts", "/skills", "/integrations", "/docs/start-here.md", "/docs/compatibility.md", "/docs/troubleshooting.md", "/docs/connect", "/docs/reference", "/examples/sample-knowledge", "/examples/workflows", "/examples/starter", "/.github", "/AGENTS.md", "/CONTRIBUTING.md", "/SECURITY.md", "/LICENSE", "/README.md", "/pyproject.toml", "/uv.lock"]
 
 [tool.ruff]
 target-version = "py311"

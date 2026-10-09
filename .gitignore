@@ -8,3 +8,6 @@ dist/
 .env
 .env.*
 .DS_Store
+
+# Local planning, QA records and participant material
+/private/

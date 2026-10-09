@@ -11,7 +11,9 @@ uv run --locked --no-sync ruff check .
 uv run --locked --no-sync mypy
 uv run --locked --no-sync pytest
 uv run --locked --no-sync python scripts/check_documents.py
+uv run --locked --no-sync python scripts/build_sample_pack.py --check
 uv build --no-sources
+uv run --locked --no-sync python scripts/check_public_artifacts.py
 uv run --locked --no-sync python scripts/qualify_artifact.py
 ```
 
@@ -21,10 +23,16 @@ qualification runs outside the source checkout and reruns the same suite. The
 `uv pip install` step needs the public package cache/index; ordinary test execution
 needs no external network.
 
-Live beta and real agent tests are opt-in and remain separate evidence. Read
-[qualification](docs/project/qualification.md) before preparing their synthetic
-projects and credentials. Never commit a credential or paste raw protocol output
-from a customer session into an issue.
+Live beta and real agent tests are opt-in; use the
+[compatibility summary](docs/compatibility.md) for the recorded scope and
+`scripts/qualify_endpoint.py --help` for synthetic fixture configuration. Never
+commit a credential or paste raw customer protocol output into an issue. Internal
+planning and detailed QA records belong only in the ignored root `private/`
+directory; no private files are needed to build, test or contribute.
+
+Archive checks reject private material in both the wheel and source distribution.
+If `dist/` contains older artifacts, pass the exact `--wheel` and `--sdist` paths
+to `scripts/check_public_artifacts.py`, and `--wheel` to the installed qualifier.
 
 Changes to tool input/output schemas, evidence/citation behavior, error handling,
 or SDK/protocol versions need corresponding meaningful tests and compatibility

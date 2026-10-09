@@ -13,8 +13,8 @@ terminal setup, a ready Ragwell project and a dedicated API key.
 **Hosted beta:** invited testers can connect through ChatGPT web's Personal
 custom-MCP plugin flow or Claude web by signing in to Ragwell and approving one
 project. Linking, cited sample tasks/source reads and disconnect/reconnect passed.
-This route needs no local package or Ragwell API key. Managed workspaces and ordinary-user onboarding
-remain unqualified. See the [compatibility record](docs/compatibility.md) for actual
+This route needs no local package or Ragwell API key. Managed workspaces and
+ordinary-user onboarding remain unqualified. See the [compatibility record](docs/compatibility.md) for actual
 test evidence; intended client support is not yet a certification.
 
 | Your agent | Start here | Current route |
@@ -25,18 +25,20 @@ test evidence; intended client support is not yet a certification.
 | Claude web / Free personal | [Connect Claude web](docs/connect/claude-web.md) | Invited beta OAuth connector |
 | Another MCP client | [Generic setup](docs/connect/other-mcp.md) | Qualify its local transport and credential handling |
 
-Start with [the setup guide](docs/start-here.md), then try the
-[sample questions](examples/workflows/README.md). You can ask how a process works,
+Start with your agent guide above, or try the
+[four-document starter pack](examples/starter/README.md) and
+[sample questions](examples/workflows/README.md). Local setup is described in
+[the setup guide](docs/start-here.md). You can ask how a process works,
 compare policies, or consult decisions before making a change. The pilot cannot
 upload/delete documents or switch projects. With `document:read`, the agent can
 read additional context from a source returned by search, keeping its exact
 document version and index generation.
 
-Keys belong in agent environment/credential settings, never chat. Searches consume
+For local connections, keys belong in agent credential settings, never chat. Searches consume
 Ragwell usage and returned text reaches your chosen agent provider. The API checks
 access on every search; read-only access can still disclose the permitted documents.
 
 For development, see [CONTRIBUTING.md](CONTRIBUTING.md). The independent package
-uses the published Python SDK and requires no backend checkout. Product direction,
-remaining delivery stages and boundaries are in [the strategy](docs/project/strategy.md)
-and [the plan](docs/project/plan.md).
+uses the published Python SDK and requires no backend checkout. See
+[how the tools work](docs/reference/architecture.md) and
+[tested compatibility](docs/compatibility.md) for boundaries and supported routes.

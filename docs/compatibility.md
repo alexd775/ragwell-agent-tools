@@ -1,39 +1,47 @@
-# Compatibility and qualification
+# Compatibility and tested surfaces
 
-The first implementation targets Python 3.11–3.14, `ragwell` 0.2.x and the pinned
-MCP Python SDK 2.2.0. The initial local interpreter is Python 3.12.14 on macOS arm64.
-Actual gate results and remaining work are recorded in
-[qualification](project/qualification.md). `uv tool install` resolves the newest
-compatible `ragwell` 0.2.x rather than `uv.lock`; result fields added by such a
-release are omitted until deliberately projected, so searches keep working.
+The local adapter supports Python 3.11–3.14, Ragwell SDK 0.2.x and MCP Python SDK
+2.2.0. Candidate **0.1.0a3** uses published SDK **0.2.2** for current-grant checks,
+search and bounded supporting-source reads.
 
-| Surface | Status | What the evidence establishes |
-|---|---|---|
-| Adapter and SDK HTTP contract | Local deterministic gates passed | Validation, result bounds, provenance, cancellation/admission and deliberate failures against synthetic peers |
-| MCP in-process and stdio | Local protocol gates passed | Discovery/search, clean shutdown, legacy and modern connection modes; no model task evaluation |
-| Clean installed wheel | Passed on macOS arm64, Python 3.11–3.14 | 74 tests per clean environment outside source/backend checkouts |
-| Component-score schema repair | Passed on macOS arm64, Python 3.12.14 | 79 source/installed-wheel tests; both stdio modes accept unavailable scores |
-| Live beta endpoint pilot | Accepted by Alex after seven passing cases | Four corpus checks plus scope/revoked/foreign-project denials; live expiry/quota/rate deferred, second-tenant ownership unconfirmed |
-| Codex CLI 0.131.0 | Three guarded real tasks, explicit project-skill invocation and pre-revoked-key handling passed | Installed wheel on macOS 26.6.2 arm64; exact citations after skill repair; one known hostile fixture ignored; interactive onboarding unverified |
-| Claude Code 2.1.148 / claude-opus-5-5 | Three guarded real tasks, native project-skill loading and pre-revoked-key handling passed | Same installed wheel/OS; exact citations and known hostile fixture handling; one initial API-unavailable call stopped without replay, fresh QA task subsequently passed; interactive onboarding unverified |
-| Source reads: Codex CLI 0.131.0 and Claude Code 2.1.287 / claude-opus-5-5 | Seven guarded tasks passed with 0.1.0a2 / public SDK 0.2.1 | Exact issued identities, fixture slices, citations and native skill invocation; [dated evidence](project/source-host-qualification.md); static visibility, other surfaces and onboarding still unqualified |
-| Current-grant discovery and source reads | 0.1.0a3 / public SDK 0.2.2: 131 source and installed tests, six hosted CI jobs, four live unmetered grant cases and seven guarded Codex/Claude tasks passed | [Dated evidence](project/grant-host-qualification.md); two original searches timed out at the API embedding stage and stopped without replay; fresh leave tasks passed; broader reliability and onboarding remain unqualified |
-| Codex desktop/cloud | Planned qualification | Local CLI configuration is not evidence for other surfaces |
-| ChatGPT web / Personal custom-MCP plugin | Invited hosted beta: linking, guarded source-based tasks and disconnect/reconnect passed, 2026-10-03 | [Dated evidence](project/hosted-chatgpt-qualification.md); Medium effort, model version uncaptured; one initial embedding timeout stopped without replay; operator-assisted setup only |
-| ChatGPT Work / managed workspaces | Unqualified | Personal plugin QA does not establish workspace eligibility or administrator setup |
-| Claude web / Free personal / Chat / Sonnet 5.5 Medium | Invited hosted beta: three cited workflows/source reads and disconnect/reconnect passed, 2026-10-03 | [Dated evidence](project/hosted-claude-qualification.md); two initial embedding timeouts stopped without replay; one lazy-tool-loading interruption, successful tasks in preloaded mode; operator-assisted setup only |
-| Claude desktop, Cowork and other providers | Unverified | Research/qualify each exact account, surface, transport and installation route |
+The client observations below were recorded on **2026-10-02 through 2026-10-04**.
+They establish the named versions and account surfaces; other versions, plans
+and installation routes need their own checks.
 
-Candidate 0.1.0a3 uses published SDK 0.2.2 for authenticated current-grant
-discovery and an unmetered `--check`, with its own dated qualification above.
-Earlier 0.1.0a1/a2 records remain historical. Keys must carry current
-`retrieval:search` grants for the configured project. Source expansion additionally
-requires `document:read` and the updated generation/source identity contract.
-Earlier search-only evidence applies to 0.1.0a1; the source-read record separately
-qualifies 0.1.0a2. Neither is relabeled as current-candidate evidence.
+| Surface | Recorded support | Limits |
+| --- | --- | --- |
+| Local adapter and clean installed wheel | Deterministic protocol, validation, provenance, authorization projection, failure and no-replay tests passed. CI covers Linux Python 3.11–3.14 and macOS/Windows Python 3.12. | Synthetic peers exercise the adapter; they do not certify live service capacity or human usability. |
+| Codex CLI 0.131.0 | Guarded process, policy-comparison and project-decision tasks passed on macOS arm64, including source reads and explicit project-skill invocation. | Desktop/cloud and uncoached installation remain unverified; the resolved default model was not captured. |
+| Claude Code 2.1.287 / claude-opus-5-5 | The same guarded workflows, supporting-source reads and native project-skill loading passed on macOS arm64. | Other Claude Code versions and uncoached installation need separate checks. |
+| ChatGPT web / Personal custom MCP | Invited beta account linking, cited workflows, source reads and disconnect/reconnect passed. | Operator-assisted setup; underlying model version was not captured. |
+| Claude web / Free personal / Chat / Sonnet 5.5 Medium | Invited beta account linking, cited workflows, source reads and disconnect/reconnect passed. | Operator-assisted setup. Successful tasks used preloaded tools after a lazy-loading interruption. |
+| ChatGPT Work / managed workspaces | Unqualified. | Personal custom-MCP observations do not establish workspace eligibility or administrator setup. |
+| Codex desktop/cloud, Claude desktop/Cowork and other providers | Unverified. | Generic MCP compatibility is not a tested installation or account route. |
 
-The package has not been published to PyPI or submitted to an agent directory.
-An installable source artifact, public listing and qualified account/workspace
-connection are separate milestones. Requalify host guides when behavior changes.
+## Requirements and known limitations
 
-CI is configured for Linux on Python 3.11–3.14 and macOS/Windows on 3.12.
+Local keys need current `retrieval:search` access to the configured project.
+Source reads additionally need `document:read` and the generation/source identity
+contract. `ragwell-agent-tools --check` reads current grants without making a
+search; it does not prove document readiness, available quota or provider health.
+
+`uv tool install` resolves compatible public SDK dependencies rather than applying
+the repository's development lock. Changes to projected fields or supported
+versions are reviewed explicitly.
+
+Beta searches have encountered embedding timeouts following deployment. Agents
+stopped without automatic replay; separate later tasks succeeded. A timeout can
+still record usage. Claude web also encountered a tool-loading interruption;
+the [connection guide](connect/claude-web.md) describes the observed workaround.
+
+Guarded tests using a labeled hostile document do not establish general
+prompt-injection resistance. Nontechnical onboarding, production reliability,
+consumer data controls and regional/enterprise guarantees are not certified by
+these observations. Live local-key expiry, quota and rate fixtures remain
+unqualified.
+
+The tools package is not yet published to PyPI or an agent directory. Source
+installation, directory listing and hosted account eligibility are separate.
+For setup, choose a guide from the [repository overview](../README.md). For a
+problem, use [troubleshooting](troubleshooting.md) and report the observed client,
+surface, version, sanitized error code and failing step.

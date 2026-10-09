@@ -14,7 +14,7 @@ describes the evidence and remaining limits.
 
 Sign in to Ragwell, choose a project and wait until its documents are ready for
 search. For the first test, upload the fictional documents in
-[sample-knowledge](../../examples/sample-knowledge). Remember that project's name
+[starter pack](../../examples/starter/README.md). Remember that project's name
 so you can select it during approval. If you use several browser profiles, open
 ChatGPT and Ragwell in the profile with the intended Ragwell account.
 
@@ -106,5 +106,5 @@ deployment warm-up limitation; never automatically replay a metered search.
 See [troubleshooting](../troubleshooting.md).
 
 This is an operator-assisted beta setup, not a measured ordinary-user onboarding
-result. [Dated qualification](../project/hosted-chatgpt-qualification.md) records
-the tested tasks, disconnect/reconnect and remaining client scope.
+result. The [compatibility summary](../compatibility.md) records the tested
+surface, workflows and remaining client scope.

@@ -13,7 +13,7 @@ documents. See the [compatibility record](../compatibility.md) for the exact lim
 
 Sign in to Ragwell and wait until your project's documents are ready for search.
 For a first test, use the fictional documents in
-[sample-knowledge](../../examples/sample-knowledge). Remember the project's name.
+[starter pack](../../examples/starter/README.md). Remember the project's name.
 Open Claude and Ragwell in the browser profile with the intended Ragwell account.
 Claude Code's terminal login does not sign in Claude web.
 
@@ -98,6 +98,6 @@ is needed. Two initial searches timed out in this pilot before later tasks passe
 never automatically replay a metered search.
 See [troubleshooting](../troubleshooting.md).
 
-[Dated qualification](../project/hosted-claude-qualification.md) records the tested
-surface, setup workaround, failures and limits. This guide is not a measured
+The [compatibility summary](../compatibility.md) records the tested
+surface, setup workaround and limits. This guide is not a measured
 ordinary-user onboarding result.

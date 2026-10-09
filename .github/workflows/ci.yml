@@ -43,9 +43,13 @@ jobs:
         run: uv run --locked --no-sync mypy
       - name: Test without external services
         run: uv run --locked --no-sync pytest
-      - name: Check public guides and templates
-        run: uv run --locked --no-sync python scripts/check_documents.py
+      - name: Check public guides, templates and sample pack
+        run: |
+          uv run --locked --no-sync python scripts/check_documents.py
+          uv run --locked --no-sync python scripts/build_sample_pack.py --check
       - name: Build independent distributions
-        run: uv build --no-sources
+        run: |
+          uv build --no-sources
+          uv run --locked --no-sync python scripts/check_public_artifacts.py
       - name: Qualify installed wheel outside checkout
         run: uv run --locked --no-sync python scripts/qualify_artifact.py

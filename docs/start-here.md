@@ -9,7 +9,7 @@ The pilot retrieves passages and citations from one project; your agent explains
 
 In Ragwell, create or choose a project and upload documents. Wait until they are
 ready for search. For a safe first test, use the synthetic documents in
-[sample-knowledge](../examples/sample-knowledge) and their
+[starter pack](../examples/starter/README.md) and its
 [starter questions](../examples/workflows/README.md).
 
 Create a dedicated API key granting **`retrieval:search`** to that project. Copy

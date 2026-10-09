@@ -1,5 +1,5 @@
 name: Integration problem
-description: Report a reproducible public package or setup problem
+description: Report a hosted connection, local tool or setup problem
 body:
   - type: markdown
     attributes:
@@ -7,13 +7,15 @@ body:
   - type: input
     id: environment
     attributes:
-      label: Agent, version and operating system
+      label: Agent, account surface, version and operating system
+      description: For hosted connections, include ChatGPT Personal or Claude web and the model if visible. Omit account identifiers.
     validations:
       required: true
   - type: input
     id: package
     attributes:
-      label: Ragwell tools package version
+      label: Ragwell tools package version or hosted connection
+      description: For browser-only setup, write hosted; no local package is needed.
     validations:
       required: true
   - type: textarea

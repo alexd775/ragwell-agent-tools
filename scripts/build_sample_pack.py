@@ -22,9 +22,9 @@ def archive_bytes(root: Path) -> bytes:
             info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
             info.create_system = 3
             info.external_attr = 0o100644 << 16
-            archive.writestr(
-                info, (root / "examples" / "sample-knowledge" / name).read_bytes()
-            )
+            # Canonical LF keeps Windows checkouts byte-identical to the pack.
+            content = (root / "examples" / "sample-knowledge" / name).read_bytes()
+            archive.writestr(info, content.replace(b"\r\n", b"\n"))
     return output.getvalue()
 
 

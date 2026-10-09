@@ -34,6 +34,9 @@ Archive checks reject private material in both the wheel and source distribution
 If `dist/` contains older artifacts, pass the exact `--wheel` and `--sdist` paths
 to `scripts/check_public_artifacts.py`, and `--wheel` to the installed qualifier.
 
+Starter-pack Markdown uses canonical LF line endings inside the ZIP, including
+when Git checks out CRLF on Windows. The drift check still rejects content edits.
+
 Changes to tool input/output schemas, evidence/citation behavior, error handling,
 or SDK/protocol versions need corresponding meaningful tests and compatibility
 notes. Guides and templates must agree with the exact qualified host surface.

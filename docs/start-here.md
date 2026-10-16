@@ -7,19 +7,19 @@ The pilot retrieves passages and citations from one project; your agent explains
 
 ## Prepare your project
 
-In Ragwell, create or choose a project and upload documents. Wait until they are
-ready for search. For a safe first test, use the synthetic documents in
-[starter pack](../examples/starter/README.md) and its
+In the [Ragwell dashboard](https://app.ragwell.dev), create or choose a project and
+upload documents. Wait until they are ready for search. For a safe first test, use
+the synthetic documents in [starter pack](../examples/starter/README.md) and its
 [starter questions](../examples/workflows/README.md).
 
 Create a dedicated API key granting **`retrieval:search`** to that project. Copy
-the project ID and the API origin provided for your beta environment. The API
-origin is the service address, not the dashboard page URL or a `/v1` endpoint.
+the project ID and use `https://api.ragwell.dev` as the API origin. The API origin
+is the service address, not the dashboard page URL or a `/v1` endpoint.
 Keep the key in your credential settings and give it a useful name and expiry.
 
 To let the agent read more surrounding text when a passage is unclear, also grant
 **`document:read`**. Search alone works without it. Source expansion requires the
-updated beta API; if the result says expansion is unavailable, use the passages
+current API; if the result says expansion is unavailable, use the passages
 already returned or open the document in Ragwell.
 
 ## Install the local tool
@@ -44,7 +44,7 @@ not been published to PyPI; do not substitute an unverified package with the sam
 Set these variables in the environment from which you start your local agent:
 
 ```sh
-export RAGWELL_BASE_URL="https://your-ragwell-api.example"
+export RAGWELL_BASE_URL="https://api.ragwell.dev"
 export RAGWELL_PROJECT_ID="your-project-uuid"
 ```
 
@@ -78,7 +78,7 @@ ragwell-agent-tools --check
 Expect `status: ready` and `ragwell_search`. With `document:read`,
 `ragwell_fetch_source` is also listed. This reads only current grants; it makes no
 search, uploads or document changes. If it fails, follow the returned guidance
-before connecting an agent. It requires the updated beta API and SDK 0.2.2.
+before connecting an agent. It requires the current API and SDK 0.2.2.
 Other projects granted to the same key are never offered as agent choices.
 
 ## Choose your agent and try a question

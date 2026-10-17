@@ -1,40 +1,47 @@
 # Ragwell in Claude web
 
-The invited beta passed account linking, three source-based workflows and
+This guide connects to production Ragwell at `https://app.ragwell.dev/mcp`.
+The earlier invited beta passed account linking, three source-based workflows and
 disconnect/reconnect in **Claude web**, using a **Free personal account** and
 **Sonnet 5.5 / Medium** on 2026-10-03. This guide follows that operator-assisted
 flow. Desktop, Cowork, other plans and ordinary-user onboarding have not been
 qualified. Ragwell is not listed in Claude's public connector directory.
 
-You do not need a Ragwell API key, Python or a terminal. Use only synthetic beta
-documents. See the [compatibility record](../compatibility.md) for the exact limits.
+You do not need a Ragwell API key, Python or a terminal. Use synthetic documents
+for your first test. See the [compatibility record](../compatibility.md) for the
+exact limits.
 
 ## Prepare your project
 
-Sign in to Ragwell and wait until your project's documents are ready for search.
+Sign in to [Ragwell](https://app.ragwell.dev) and wait until your project's documents
+are ready for search.
 For a first test, use the fictional documents in
 [starter pack](../../examples/starter/README.md). Remember the project's name.
 Open Claude and Ragwell in the browser profile with the intended Ragwell account.
 Claude Code's terminal login does not sign in Claude web.
 
-## Add the beta connector
+## Add the Ragwell connector
 
 In Claude, open **Customize → Connectors → Add connector → Add custom connector**.
 Supply these settings and continue through server discovery:
 
 | Setting | Value |
 |---|---|
-| Name | Ragwell Beta |
-| MCP server URL | https://beta.ragwell.dev/mcp |
+| Name | Ragwell |
+| MCP server URL | https://app.ragwell.dev/mcp |
 | Authentication | Sign in now |
 | OAuth setup | Use your own OAuth client |
-| Client ID | ragwell-claude-beta |
+| Client ID | ragwell-claude |
 | Client secret | Leave empty |
 
 The client ID is public configuration, not a secret or API key. Ragwell uses the
 exact callback https://claude.ai/api/mcp/auth_callback. If discovery fails or
-Claude presents a different callback, ask the beta maintainer before continuing.
+Claude presents a different callback, ask the Ragwell maintainer before continuing.
 Do not invent a callback or enter a client secret.
+
+If you previously connected to beta, add a new connection with these production
+settings and select a project from your production account. A beta connection
+does not transfer its account, documents or approval to production.
 
 Start **Connect**. On Ragwell's **Connect Claude** page:
 
@@ -55,7 +62,7 @@ test and use **Allow once** when the requested tool matches your question.
 ## Ask a question and check the sources
 
 Start a new Chat. In the composer's **+ → Connectors** menu, check that
-**Ragwell Beta** is enabled. The pilot encountered a fresh chat that could not
+**Ragwell** is enabled. The pilot encountered a fresh chat that could not
 find tools with **Load tools when needed**. Successful tasks used
 **+ → Connectors → Tool access → Tools already loaded**. Try that mode if the
 enabled connector is unavailable; it does not change your Ragwell permissions.
@@ -85,7 +92,7 @@ It changes to **Disconnected or expired**. Claude's next request may display
 **Authentication required to use this tool** with a **Connect** control.
 Disconnect stops future access; it cannot retract text already received by Anthropic.
 
-To reconnect, open the Ragwell Beta connector in Claude. Its connection-issue page
+To reconnect, open the Ragwell connector in Claude. Its connection-issue page
 offers **Reconnect**. Sign in to Ragwell, select the intended project again and
 approve the read permissions. The new connection lasts up to 30 days; the old
 disconnected entry can remain in Ragwell history. Start a fresh chat to check
@@ -98,6 +105,7 @@ is needed. Two initial searches timed out in this pilot before later tasks passe
 never automatically replay a metered search.
 See [troubleshooting](../troubleshooting.md).
 
-The [compatibility summary](../compatibility.md) records the tested
-surface, setup workaround and limits. This guide is not a measured
-ordinary-user onboarding result.
+Production discovery and the unauthenticated MCP challenge were checked on
+2026-10-17; the full browser linking and cited-task flow has not been repeated
+against production. The [compatibility summary](../compatibility.md) records the
+tested surface, setup workaround and limits.

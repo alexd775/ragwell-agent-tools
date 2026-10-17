@@ -2,7 +2,7 @@
 
 This local early-access setup is for people comfortable using a terminal. If you
 prefer a sign-in-and-connect flow, follow the [ChatGPT](connect/chatgpt-work.md)
-or [Claude web](connect/claude-web.md) beta guide.
+or [Claude web](connect/claude-web.md) hosted guide.
 The pilot retrieves passages and citations from one project; your agent explains them.
 
 ## Prepare your project

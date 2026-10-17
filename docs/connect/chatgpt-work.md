@@ -1,40 +1,41 @@
 # Ragwell in ChatGPT
 
-The invited beta connection passed source-based tasks in ChatGPT web's
+This guide connects to production Ragwell at `https://app.ragwell.dev/mcp`.
+The earlier invited beta connection passed source-based tasks in ChatGPT web's
 **Personal** custom-MCP plugin flow on 2026-10-03. This guide follows that exact
 flow. Your account must show the custom MCP option; managed workspaces, ChatGPT
 Work and other installation routes have not been qualified. Ragwell is not yet
 listed in a public agent directory.
 
 You do not need a Ragwell API key, Python or a terminal for this hosted connection.
-Use only synthetic beta documents. The [compatibility record](../compatibility.md)
-describes the evidence and remaining limits.
+Use synthetic documents for your first test. The
+[compatibility record](../compatibility.md) describes the evidence and remaining limits.
 
 ## Prepare your Ragwell project
 
-Sign in to Ragwell, choose a project and wait until its documents are ready for
-search. For the first test, upload the fictional documents in
+Sign in to [Ragwell](https://app.ragwell.dev), choose a project and wait until its
+documents are ready for search. For the first test, upload the fictional documents in
 [starter pack](../../examples/starter/README.md). Remember that project's name
 so you can select it during approval. If you use several browser profiles, open
 ChatGPT and Ragwell in the profile with the intended Ragwell account.
 
-## Add the beta plugin
+## Add the Ragwell plugin
 
 In ChatGPT, open **Plugins → Personal → Add** and choose
 **Create custom MCP server**. Enter:
 
 | Setting | Value |
 |---|---|
-| Name | `Ragwell Beta` |
-| Server URL | `https://beta.ragwell.dev/mcp` |
+| Name | `Ragwell` |
+| Server URL | `https://app.ragwell.dev/mcp` |
 | Authentication | OAuth |
 
 Open the advanced OAuth settings and let ChatGPT discover Ragwell's settings.
-Select **User-Defined OAuth Client** and use the supplied beta settings:
+Select **User-Defined OAuth Client** and use the production settings:
 
 | Setting | Value |
 |---|---|
-| Client ID | `ragwell-chatgpt-beta` |
+| Client ID | `ragwell-chatgpt` |
 | Client secret | Leave empty |
 | Token endpoint authentication | `none` |
 | Default scopes | `retrieval:search document:read` |
@@ -44,12 +45,16 @@ These scope names let the connection search and read supporting passages. The
 client ID is public configuration; it is not a secret or an API key. After
 discovery, the callback must be exactly
 `https://chatgpt.com/connector_platform_oauth_redirect`. If ChatGPT shows a
-different callback or cannot discover the server, contact the beta maintainer
+different callback or cannot discover the server, contact the Ragwell maintainer
 before continuing. Do not guess a replacement URL or supply a client secret.
 
 Review ChatGPT's connection notice, create the plugin and choose
-**Continue to Ragwell Beta**. Menu wording may change. If your account does not
-offer this setup, ask the beta maintainer which route is available to you.
+**Continue to Ragwell**. Menu wording may change. If your account does not
+offer this setup, ask the Ragwell maintainer which route is available to you.
+
+If you previously connected to beta, add a new connection with these production
+settings and select a project from your production account. A beta connection
+does not transfer its account, documents or approval to production.
 
 ## Approve one project
 
@@ -71,7 +76,7 @@ an expired request grants no access.
 
 ## Ask a question and check its sources
 
-Open **Ragwell Beta → Try in chat**. With the sample documents, try:
+Open **Ragwell → Try in chat**. With the sample documents, try:
 
 > Using Ragwell, explain how I request leave. Read the supporting source and show
 > its filename and original coordinates. If a tool fails, stop without replaying
@@ -95,16 +100,17 @@ confirm. The connection changes to **Disconnected or expired**. ChatGPT will
 need to reconnect before making another request. Disconnecting stops future
 access; it cannot remove text already received or saved by the provider.
 
-To reconnect, open the Ragwell Beta plugin in ChatGPT and choose **Reconnect**.
+To reconnect, open the Ragwell plugin in ChatGPT and choose **Reconnect**.
 Continue to Ragwell, check the account, project and read permissions, and approve
 again. A new connection lasts up to 30 days. You can see its expiry in Ragwell;
 the old disconnected entry can remain in the history.
 
 If a search times out, usage may already have been recorded. Stop and review the
-error before deciding on a separate new attempt. The beta has an accepted
-deployment warm-up limitation; never automatically replay a metered search.
+error before deciding on a separate new attempt; never automatically replay a
+metered search.
 See [troubleshooting](../troubleshooting.md).
 
-This is an operator-assisted beta setup, not a measured ordinary-user onboarding
-result. The [compatibility summary](../compatibility.md) records the tested
-surface, workflows and remaining client scope.
+Production discovery and the unauthenticated MCP challenge were checked on
+2026-10-17; the full browser linking and cited-task flow has not been repeated
+against production. The [compatibility summary](../compatibility.md) records the
+tested surface, workflows and remaining client scope.

@@ -18,7 +18,8 @@ does not make a metered search.
 
 ## Hosted connection
 
-The supported hosted beta routes use Ragwell account linking and consent to one
+The hosted production endpoint is `https://app.ragwell.dev/mcp`. Hosted routes
+use Ragwell account linking and consent to one
 project. They require no local package or Ragwell API key. The hosted service
 reuses the canonical tool definitions while enforcing authorization, source
 access, accounting and credential lifecycle centrally. Hosted OAuth credentials

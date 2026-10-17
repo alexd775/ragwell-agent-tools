@@ -8,6 +8,15 @@ The client observations below were recorded on **2026-10-02 through 2026-10-04**
 They establish the named versions and account surfaces; other versions, plans
 and installation routes need their own checks.
 
+The current hosted setup guides target production `https://app.ragwell.dev/mcp`
+with public clients `ragwell-chatgpt` and `ragwell-claude`. The production
+configuration declares their exact callbacks. On 2026-10-17, OAuth and protected
+resource discovery returned the production issuer, resource and supported scopes;
+unauthenticated MCP access required authentication. Full browser linking, cited
+tasks and disconnect/reconnect were
+not repeated on production. The earlier beta observations below remain historical
+evidence and do not certify those production flows.
+
 | Surface | Recorded support | Limits |
 | --- | --- | --- |
 | Local adapter and clean installed wheel | Deterministic protocol, validation, provenance, authorization projection, failure and no-replay tests passed. CI covers Linux Python 3.11–3.14 and macOS/Windows Python 3.12. | Synthetic peers exercise the adapter; they do not certify live service capacity or human usability. |

@@ -10,8 +10,9 @@ Claude Code tasks. The 0.1.0a3 candidate adds current-grant tool visibility and 
 unmetered connection check using published SDK 0.2.2 and the updated API. It requires
 terminal setup, a ready Ragwell project and a dedicated API key.
 
-**Hosted beta:** invited testers can connect through ChatGPT web's Personal
-custom-MCP plugin flow or Claude web by signing in to Ragwell and approving one
+**Hosted connection:** use the production endpoint and OAuth client settings in
+the ChatGPT or Claude web guide. Earlier invited testers connected through
+ChatGPT web's Personal custom-MCP plugin flow or Claude web by signing in to Ragwell and approving one
 project. Linking, cited sample tasks/source reads and disconnect/reconnect passed.
 This route needs no local package or Ragwell API key. Managed workspaces and
 ordinary-user onboarding remain unqualified. See the [compatibility record](docs/compatibility.md) for actual
@@ -21,8 +22,8 @@ test evidence; intended client support is not yet a certification.
 |---|---|---|
 | Codex CLI | [Connect Codex](docs/connect/codex.md) | Local MCP and optional skill |
 | Claude Code | [Connect Claude Code](docs/connect/claude-code.md) | Local MCP and optional skill |
-| ChatGPT web / Personal | [Connect ChatGPT](docs/connect/chatgpt-work.md) | Invited beta OAuth plugin |
-| Claude web / Free personal | [Connect Claude web](docs/connect/claude-web.md) | Invited beta OAuth connector |
+| ChatGPT web / Personal | [Connect ChatGPT](docs/connect/chatgpt-work.md) | Hosted OAuth plugin; see qualification limits |
+| Claude web / Free personal | [Connect Claude web](docs/connect/claude-web.md) | Hosted OAuth connector; see qualification limits |
 | Another MCP client | [Generic setup](docs/connect/other-mcp.md) | Qualify its local transport and credential handling |
 
 Start with your agent guide above, or try the

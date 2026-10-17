@@ -1,8 +1,9 @@
 # Try Ragwell with fictional documents
 
 Use this small example to connect a Ragwell project and check your agent's answers
-against their sources. It needs a Ragwell beta invitation and a supported agent
-connection.
+against their sources. It needs access to a production Ragwell account and a
+supported agent connection. If registration requires an invitation, obtain one
+from the Ragwell maintainer.
 
 ## Prepare the documents
 

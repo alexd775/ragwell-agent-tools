@@ -23,7 +23,7 @@ qualification runs outside the source checkout and reruns the same suite. The
 `uv pip install` step needs the public package cache/index; ordinary test execution
 needs no external network.
 
-Live beta and real agent tests are opt-in; use the
+Live deployed-API and real agent tests are opt-in; use the
 [compatibility summary](docs/compatibility.md) for the recorded scope and
 `scripts/qualify_endpoint.py --help` for synthetic fixture configuration. Never
 commit a credential or paste raw customer protocol output into an issue. Internal

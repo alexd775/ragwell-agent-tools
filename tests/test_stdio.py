@@ -36,6 +36,8 @@ class Peer:
     filenames: dict[str, str] = field(default_factory=dict)
     nullable_scores: bool = False
     discovery_requests: list[str] = field(default_factory=list)
+    description_requests: list[str] = field(default_factory=list)
+    description: str | None = None
 
 
 @pytest.fixture
@@ -47,6 +49,17 @@ def peer() -> Iterator[Peer]:
             pass
 
         def do_GET(self) -> None:
+            if self.path == f"/v1/projects/{PROJECT_ID}/agent-description":
+                value.description_requests.append(self.path)
+                encoded = json.dumps(
+                    {"project_id": str(PROJECT_ID), "description": value.description}
+                ).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(encoded)))
+                self.end_headers()
+                self.wfile.write(encoded)
+                return
             if self.path == "/v1/machine/capabilities":
                 value.discovery_requests.append(self.path)
                 authority = self.headers.get("Authorization", "")
@@ -184,10 +197,29 @@ def test_real_stdio_handshake_search_and_clean_shutdown(
     asyncio.run(scenario())
     assert len(peer.requests) == 2
     assert len(peer.discovery_requests) == 3
+    assert len(peer.description_requests) == 1
     assert peer.requests[0]["body"] == {"query": "How do I request travel?", "k": 1}
     captured = capfd.readouterr()
     assert captured.out == ""
     assert captured.err == ""
+
+
+def test_stdio_lists_fresh_project_context_after_update_and_clear(
+    peer: Peer, tmp_path: Path
+) -> None:
+    async def scenario() -> None:
+        async with Client(parameters(peer.origin, tmp_path)) as client:
+            generic = (await client.list_tools()).tools
+            peer.description = "Approved travel and leave policies."
+            updated = (await client.list_tools()).tools
+            assert peer.description in (updated[0].description or "")
+            assert updated[1] == generic[1]
+            peer.description = None
+            assert (await client.list_tools()).tools == generic
+
+    asyncio.run(scenario())
+    assert len(peer.discovery_requests) == len(peer.description_requests) == 3
+    assert not peer.requests
 
 
 @pytest.mark.parametrize("mode", ["legacy", "auto"])

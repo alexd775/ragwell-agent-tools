@@ -185,6 +185,14 @@ def test_mcp_search_then_source_uses_only_published_sdk_and_fixed_project() -> N
         def respond(request: httpx.Request) -> httpx.Response:
             if request.url.path == "/v1/machine/capabilities":
                 return httpx.Response(200, json=capabilities_body())
+            if request.url.path == f"/v1/projects/{PROJECT_ID}/agent-description":
+                assert (
+                    request.headers["Authorization"]
+                    == "Bearer synthetic-test-credential"
+                )
+                return httpx.Response(
+                    200, json={"project_id": str(PROJECT_ID), "description": None}
+                )
             calls.append(request)
             assert (
                 request.headers["Authorization"] == "Bearer synthetic-test-credential"

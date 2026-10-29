@@ -19,6 +19,11 @@ def main() -> None:
     parser.add_argument(
         "--python", help="Interpreter for qualification; defaults to this Python"
     )
+    parser.add_argument(
+        "--sdk-wheel",
+        type=Path,
+        help="Explicit SDK candidate wheel for pre-publication contract qualification",
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     wheels = (
@@ -42,6 +47,7 @@ def main() -> None:
                 "--python",
                 str(python),
                 str(wheels[0]),
+                *([str(args.sdk_wheel.resolve())] if args.sdk_wheel else []),
                 "pytest==9.1.1",
             ],
             check=True,

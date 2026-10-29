@@ -9,6 +9,7 @@ from ragwell import AsyncRagwell
 from ragwell.types import (
     DocumentSourcePreview,
     MachineCapabilitiesResponse,
+    ProjectAgentDescriptionResponse,
     SearchResponse,
 )
 
@@ -30,6 +31,9 @@ class SdkOperations:
 
     async def capabilities(self) -> MachineCapabilitiesResponse:
         return await self._client.capabilities.get()
+
+    async def agent_description(self) -> ProjectAgentDescriptionResponse:
+        return await self._project.agent_description()
 
     async def search(self, request: SearchInput) -> SearchResponse:
         return await self._project.search(query=request.query, k=request.k)

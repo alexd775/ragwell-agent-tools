@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from ragwell.types import (
     DocumentSourcePreview,
     MachineCapabilitiesResponse,
+    ProjectAgentDescriptionResponse,
     SearchResponse,
 )
 
@@ -64,6 +65,10 @@ class FetchSourceInput(BaseModel):
 class SearchOperations(Protocol):
     async def capabilities(self) -> MachineCapabilitiesResponse:
         """Read the current key's grants without searching or broadening authority."""
+        ...
+
+    async def agent_description(self) -> ProjectAgentDescriptionResponse:
+        """Read authorized descriptive context for the configured project."""
         ...
 
     async def search(self, request: SearchInput) -> SearchResponse:

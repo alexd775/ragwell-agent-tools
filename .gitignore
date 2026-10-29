@@ -8,6 +8,8 @@ dist/
 .env
 .env.*
 .DS_Store
+.security-reports/
+.source-security-cache.*/
 
 # Local planning, QA records and participant material
 /private/

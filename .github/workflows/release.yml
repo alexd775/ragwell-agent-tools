@@ -1,0 +1,121 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  security:
+    name: Secret, dependency, license and SBOM gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Scan exact committed source
+        run: bash scripts/source-security.sh
+      - name: Preserve security evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: source-security-reports
+          path: .security-reports/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  build:
+    name: Build and qualify distributions
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "0.12.17"
+          python-version: "3.11"
+          enable-cache: true
+      - name: Verify release identity
+        shell: bash
+        run: |
+          version="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            git merge-base --is-ancestor "${GITHUB_SHA}" origin/main
+            test "${GITHUB_REF_NAME}" = "v${version}"
+          fi
+      - name: Install locked environment
+        run: uv sync --locked
+      - name: Format, lint and type check
+        run: |
+          uv run --locked --no-sync ruff format --check .
+          uv run --locked --no-sync ruff check .
+          uv run --locked --no-sync mypy
+      - name: Test without external services
+        run: uv run --locked --no-sync pytest
+      - name: Record installed runtime and development license declarations
+        run: uv run --locked --no-sync python scripts/license_inventory.py release-evidence/installed-licenses.json --source-commit "${GITHUB_SHA}"
+      - name: Verify public guides and sample pack
+        run: |
+          uv run --locked --no-sync python scripts/check_documents.py
+          uv run --locked --no-sync python scripts/build_sample_pack.py --check
+      - name: Build and inspect public archives
+        run: |
+          uv run --locked --no-sync python -m build --no-isolation
+          uv run --locked --no-sync python scripts/check_public_artifacts.py
+      - name: Qualify clean wheel using public dependencies
+        run: uv run --locked --no-sync python scripts/qualify_artifact.py
+      - name: Record source and distribution hashes
+        run: |
+          mkdir -p release-evidence
+          printf '{"source_commit":"%s"}\n' "${GITHUB_SHA}" > release-evidence/source.json
+          sha256sum dist/*.whl dist/*.tar.gz > release-evidence/SHA256SUMS
+          cat release-evidence/SHA256SUMS
+      - name: Preserve immutable distributions
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: python-package-distributions
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve release provenance
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-evidence
+          path: release-evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-pypi:
+    name: Publish verified distributions to PyPI
+    if: github.ref_type == 'tag'
+    needs: [security, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/p/ragwell-agent-tools
+    permissions:
+      id-token: write
+    steps:
+      - name: Retrieve immutable distributions
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish through the configured Trusted Publisher
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
+        with:
+          packages-dir: dist/
+          print-hash: true

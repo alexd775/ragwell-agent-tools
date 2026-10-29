@@ -14,7 +14,12 @@ settings.
 Current-grant discovery controls which tools are offered. Every search and source
 read is still authorized by the API. Discovery failure does not fall back to
 broader inventory or previously cached authority. The local connection check
-does not make a metered search.
+does not make a metered search. Each tool listing also reads the configured
+project's owner-written description under current search authority. Both
+transports append this text through one canonical renderer as untrusted
+descriptive data; it never grants access or changes tool instructions. An absent
+description preserves the generic wording. No document is sampled and no model
+call is made to produce a description.
 
 ## Hosted connection
 

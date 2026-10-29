@@ -85,7 +85,7 @@ of these failures returns source text or claims uncertain search charges.
 
 ## Current-grant discovery
 
-SDK 0.2.2 reads `GET /v1/machine/capabilities` with the process's bound key.
+The SDK reads `GET /v1/machine/capabilities` with the process's bound key.
 Each tool listing and valid admitted invocation checks a fresh snapshot. Search
 is offered only when the configured project has `retrieval:search`; source reads
 need that scope and `document:read`, since references come from this connection's
@@ -100,7 +100,30 @@ source references. This check performs no search and consumes no local search
 attempt; SDK bounded safe-read retries apply. One shared deadline covers discovery
 and the subsequent operation. Central authorization still checks every API call.
 
-Some agents cache tool lists; refresh/reconnect after changing a key or grants.
+The 0.1.0a4 candidate additionally reads
+`GET /v1/projects/{project_id}/agent-description` on every tool listing, after
+current grants confirm search access. This requires SDK 0.2.3 and a compatible
+API. The projection contains only the bound project ID and its optional
+owner-written description, at most 2000 characters. It needs no `project:read`
+or document-read scope. The search tool appends the description as a JSON-quoted
+string explicitly marked as untrusted descriptive data. Existing cost, source
+and security instructions remain in place; tool names, schemas and annotations
+are unchanged. `ragwell_fetch_source` retains its existing generic description;
+the added context helps agents decide when to search. Empty descriptions retain
+the generic wording.
+
+Discovery fetches no documents and makes no model or search call. Listing
+failures, foreign project IDs and invalid or oversized descriptions produce a
+sanitized error with no cached-description fallback. A shared deadline bounds
+the grant and metadata reads; SDK safe-GET retries apply. Each new listing reads
+updates and clearing afresh. Project descriptions are shared with agents that
+have current search access, so owners should include only context they intend
+those agents to receive.
+
+Some agents cache tool lists; refresh/reconnect after changing a key, grants or
+project description. Already loaded client descriptions may remain visible until
+that client refreshes or reconnects; the server cannot retract text from a
+client's earlier context.
 Calls made through a cached advertisement still check current grants. A race after
 discovery is denied by the API. `ragwell-agent-tools --check` reports configured
 tool availability without a search or other-project IDs. It verifies permissions,

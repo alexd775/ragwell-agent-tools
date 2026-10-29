@@ -1,8 +1,13 @@
 # Compatibility and tested surfaces
 
-The local adapter supports Python 3.11–3.14, Ragwell SDK 0.2.x and MCP Python SDK
-2.2.0. Candidate **0.1.0a3** uses published SDK **0.2.2** for current-grant checks,
-search and bounded supporting-source reads.
+The local adapter supports Python 3.11–3.14 and MCP Python SDK 2.2.0. Version
+**0.1.0a4** requires Ragwell SDK **0.2.3** or later in the 0.2.x series and the
+project-description API. It adds fresh, authorized project context to tool
+listings and uses published SDK **0.2.3**. Synthetic source and installed-wheel
+qualification covers updated/cleared descriptions, current grants, scoped
+metadata reads, failure handling and no-search discovery. These checks do not
+establish new live-host qualification. Earlier **0.1.0a3**
+observations below used published SDK **0.2.2**.
 
 The client observations below were recorded on **2026-10-02 through 2026-10-04**.
 They establish the named versions and account surfaces; other versions, plans
@@ -49,8 +54,8 @@ consumer data controls and regional/enterprise guarantees are not certified by
 these observations. Live local-key expiry, quota and rate fixtures remain
 unqualified.
 
-The tools package is not yet published to PyPI or an agent directory. Source
-installation, directory listing and hosted account eligibility are separate.
+Use an explicit prerelease version when installing the package. Agent-directory
+listing and hosted account eligibility remain separate from Python installation.
 For setup, choose a guide from the [repository overview](../README.md). For a
 problem, use [troubleshooting](troubleshooting.md) and report the observed client,
 surface, version, sanitized error code and failing step.

@@ -10,6 +10,7 @@ from mcp.types import CallToolResult
 from ragwell.types import (
     DocumentSourcePreview,
     MachineCapabilitiesResponse,
+    ProjectAgentDescriptionResponse,
     SearchResponse,
 )
 
@@ -103,12 +104,23 @@ class FakeOperations:
         )
         self.capability_error: Exception | None = None
         self.capability_calls = 0
+        self.description_response = ProjectAgentDescriptionResponse.from_dict(
+            {"project_id": str(PROJECT_ID), "description": None}
+        )
+        self.description_error: Exception | None = None
+        self.description_calls = 0
 
     async def capabilities(self) -> MachineCapabilitiesResponse:
         self.capability_calls += 1
         if self.capability_error is not None:
             raise self.capability_error
         return self.capability_response
+
+    async def agent_description(self) -> ProjectAgentDescriptionResponse:
+        self.description_calls += 1
+        if self.description_error is not None:
+            raise self.description_error
+        return self.description_response
 
     async def search(self, request: SearchInput) -> SearchResponse:
         self.requests.append(request)

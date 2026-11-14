@@ -1,27 +1,43 @@
 ---
 name: ragwell-knowledge
-description: Use connected Ragwell documents to answer source-based questions, compare policies, or consult project decisions with citations and clear evidence gaps.
+description: Search the user's connected Ragwell project for answers grounded in its documents, including internal procedures, policies, and project decisions. Use when the request calls for evidence from that project. Cite the returned sources and explain evidence gaps.
 ---
 
 # Ragwell knowledge
 
-When the user's question needs information from their Ragwell project, choose a
-configured route before searching. Use the connected `ragwell_search` MCP tool
-when available. The host may prefix its name. Otherwise, if the user or host has
-configured the standalone CLI for this environment, run
-`ragwel-cli search --query-stdin` with the question as UTF-8 standard input. Use
-the configured executable and pass the query as data. Never interpolate query
-text into shell code. Use the host's configured project and credentials. If
-neither route is configured, direct the user to the
-[Ragwell setup guide](https://github.com/alexd775/ragwell-agent-tools/blob/main/docs/start-here.md).
-Ragwell retrieves evidence. Compose the explanation yourself.
+When a question needs evidence from the user's Ragwell project, use an available
+`ragwell_search` MCP tool. The host may prefix its name. For a shell-only
+connection, or when the user requests the CLI, use the standalone tool with the
+user's configured project. Look for the configured executable path, then
+`ragwel-cli` on PATH or the default install at `$HOME/.local/bin/ragwel-cli`.
+The CLI expects `RAGWELL_BASE_URL`, `RAGWELL_PROJECT_ID`, and `RAGWELL_API_KEY`
+in its process environment. Use the host's configured values and keep the key
+out of tool arguments and output. If connection readiness is unclear, run
+`ragwel-cli --check` with the same executable and environment. It uses zero
+searches. If neither route is configured, direct the user to the
+[Ragwell setup guide](https://docs.ragwell.dev/agents/start-here/).
 
-Search the user's question directly; omit `k` to use the five-result default, or
-choose a value from 1 to 5. Then refine only when the result misses a specific fact
-or comparison. Normally use no more than three searches per question
-unless the user requests more. Each call consumes usage. A timed-out or failed
-search may already have been charged. Report the failure without replaying it
-or switching routes to repeat it.
+For CLI search, pass the question as UTF-8 standard input to
+`ragwel-cli search --query-stdin`. Use an execution interface that can pass stdin
+directly, or pass the query as a shell argument with correct literal quoting and
+feed it to `printf '%s'`. Keep the query separate from executable shell syntax.
+For example, using the default install path with a fixed query:
+
+```sh
+printf '%s' 'What is the travel approval policy?' |
+  "$HOME/.local/bin/ragwel-cli" search --query-stdin
+```
+
+Read the JSON result from stdout. A nonzero exit means the search failed. Use the
+returned error code and message when available. Compose the answer from the
+returned evidence.
+
+Search the user's question directly. The default is five results. Use MCP
+`k` or CLI `--k` to request one to five results. Refine only when the result
+misses a specific fact or comparison. Normally use no more than three searches
+per question unless the user requests more. Each call consumes usage. A timed-out
+or failed search may already have been charged. Report the failure without
+replaying it or switching routes to repeat it.
 
 Use the returned `matches[].parts` in their original order. `evidence` parts support
 claims; `context` parts provide context and `separator` parts join the presentation.

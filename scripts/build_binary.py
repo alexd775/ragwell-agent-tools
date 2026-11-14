@@ -22,6 +22,8 @@ def main() -> None:
         parser.error("building Ragwell requires Linux x86_64 or macOS arm64")
 
     output_dir = args.output_dir.resolve()
+    root = Path(__file__).resolve().parents[1]
+    skill = root / "skills" / "ragwell-knowledge" / "SKILL.md"
     with tempfile.TemporaryDirectory(prefix="ragwell-binary-build-") as directory:
         work = Path(directory)
         launcher = work / "ragwell_binary_entry.py"
@@ -55,6 +57,8 @@ def main() -> None:
                 "mcp",
                 "--collect-data",
                 "certifi",
+                "--add-data",
+                f"{skill}:ragwell_agent_tools",
                 str(launcher),
             ],
             check=True,

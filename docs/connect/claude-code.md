@@ -1,8 +1,31 @@
 # Connect Ragwell to Claude Code
 
-Complete [the setup guide](../start-here.md). This guide targets Claude Code's
-local MCP process; it does not establish Claude desktop or web support. See
-[compatibility](../compatibility.md) for qualification status.
+Paste the [setup prompt](../start-here.md#set-up-with-a-prompt) into a local Claude
+Code session for guided installation. For manual setup, follow the
+[quickstart](../start-here.md) to install `ragwel-cli` and supply your project and
+API key. See [compatibility](../compatibility.md) for other Claude surfaces.
+
+## Install the Ragwell skill
+
+To install the skill from your local executable, run:
+
+```sh
+"$HOME/.local/bin/ragwel-cli" skill install --agent claude-code
+```
+
+The installer saves `~/.claude/skills/ragwell-knowledge/SKILL.md` and preserves an
+existing copy. If your executable lacks `skill install`, use a newer release or
+download the skill to that path. For a single project, use
+`.claude/skills/ragwell-knowledge/SKILL.md` inside that project.
+[Download SKILL.md](https://raw.githubusercontent.com/alexd775/ragwell-agent-tools/main/skills/ragwell-knowledge/SKILL.md) · [Claude Code skill locations](https://code.claude.com/docs/en/skills#choose-where-skills-load)
+
+Start Claude Code from the terminal where you supplied the Ragwell variables.
+Type `/ragwell-knowledge` and ask about your project.
+
+> /ragwell-knowledge Using Ragwell, explain how to request leave and cite the supporting passages.
+
+The skill can run `ragwel-cli` in the agent's shell. Follow the next section if
+you want Claude Code to use MCP tools and fetch surrounding source passages.
 
 ## Add the connection
 
@@ -23,24 +46,12 @@ Claude Code expands the variables in this configuration. If a variable is absent
 the host can retain its literal placeholder; supply all four variables and restart
 before trying again. A desktop process launched elsewhere may not inherit them.
 
-## Add the optional skill and try a question
-
-Copy `skills/ragwell-knowledge` to `~/.claude/skills/ragwell-knowledge`, or use
-`.claude/skills/ragwell-knowledge` inside a project for project-only discovery.
-Preserve any existing skill with that name. These local locations do not install
-the skill in a cloud/Cowork session. [Claude skill locations](https://code.claude.com/docs/en/skills).
-Ask:
-
-> Using Ragwell, explain how to request leave and cite the supporting passages.
-
-Compare the explanation with the source document. The skill guides evidence use,
-but the API enforces project access and limits independently.
-
 ## Disconnect
 
-Remove/disable the Ragwell entry in `.mcp.json` and remove the optional skill.
-Revoke the dedicated key in Ragwell to stop subsequent searches. Replace an expired
-key in your environment and restart the agent when reconnecting.
+Remove the skill folder. If you configured MCP, remove or disable the Ragwell
+entry in `.mcp.json`. Revoke the dedicated key in Ragwell to stop subsequent
+searches. Replace an expired key in your environment and restart the agent when
+reconnecting.
 
 The configuration follows [Claude Code's MCP documentation](https://code.claude.com/docs/en/mcp).
 See [troubleshooting](../troubleshooting.md) for connection and permission errors.

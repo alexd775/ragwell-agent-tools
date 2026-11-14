@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import json
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -110,3 +111,41 @@ def test_cli_rejects_bad_input_before_discovery(
     assert json.loads(capture.out)["code"] == "invalid_arguments"
     assert configured_connection.capability_calls == 0
     assert configured_connection.requests == []
+
+
+@pytest.mark.parametrize(
+    "agent, folder", [("codex", ".agents"), ("claude-code", ".claude")]
+)
+def test_cli_installs_the_bundled_skill_without_credentials(
+    agent: str,
+    folder: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsysbinary: pytest.CaptureFixture[bytes],
+) -> None:
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
+    for name in ("RAGWELL_BASE_URL", "RAGWELL_PROJECT_ID", "RAGWELL_API_KEY"):
+        monkeypatch.delenv(name, raising=False)
+
+    def invoke(*args: str) -> int:
+        monkeypatch.setattr(sys, "argv", ["ragwel-cli", "skill", *args])
+        with pytest.raises(SystemExit) as caught:
+            stdio.main()
+        assert isinstance(caught.value.code, int)
+        return caught.value.code
+
+    assert invoke("show") == 0
+    shown = capsysbinary.readouterr().out
+    assert shown.splitlines()[:2] == [b"---", b"name: ragwell-knowledge"]
+
+    target = tmp_path / folder / "skills" / "ragwell-knowledge" / "SKILL.md"
+    assert invoke("install", "--agent", agent) == 0
+    assert target.read_bytes() == shown
+    assert invoke("install", "--agent", agent) == 0
+
+    target.write_text("Customized skill.\n", encoding="utf-8")
+    assert invoke("install", "--agent", agent) == 1
+    assert target.read_text(encoding="utf-8") == "Customized skill.\n"
+    assert b"different skill already exists" in capsysbinary.readouterr().err
+    assert list(target.parent.iterdir()) == [target]

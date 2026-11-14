@@ -4,12 +4,15 @@ Ask your agent questions about documents in your Ragwell project and get evidenc
 you can check against the original sources. Ragwell retrieves relevant passages;
 your agent writes the explanation.
 
-The local adapter provides MCP search, bounded source expansion and an optional
-Ragwell skill. The [local setup guide](docs/start-here.md) covers the standalone
-`ragwel-cli` executable for Linux x86-64 and macOS Apple silicon, the Python package,
-and direct JSON search from a shell. Both local install routes use a ready
-project and a dedicated API key. See the [compatibility record](docs/compatibility.md)
-for tested clients and versions.
+The [Ragwell skill](docs/start-here.md#install-the-ragwell-skill) tells your agent
+when to query your project and how to cite the results. To set up Codex CLI or
+Claude Code, [copy the setup prompt](docs/start-here.md#set-up-with-a-prompt)
+into your agent. The local adapter provides MCP search and bounded source
+expansion. The [local setup guide](docs/start-here.md)
+covers the standalone `ragwel-cli` executable for Linux x86-64 and macOS Apple
+silicon, the Python package, and direct JSON search from a shell. Local routes use
+a ready project and a dedicated API key. See the
+[compatibility record](docs/compatibility.md) for tested clients and versions.
 
 **Hosted connection:** use the production endpoint and OAuth client settings in
 the ChatGPT or Claude web guide. Earlier invited testers connected through
@@ -21,9 +24,10 @@ test evidence; intended client support is not yet a certification.
 
 | Your agent | Start here | Current route |
 |---|---|---|
-| Shell-capable agent | [Search from a shell](docs/start-here.md#search-from-a-shell) | Standalone command and scoped API key |
-| Codex CLI | [Connect Codex](docs/connect/codex.md) | Local MCP and optional skill |
-| Claude Code | [Connect Claude Code](docs/connect/claude-code.md) | Local MCP and optional skill |
+| Shell-capable agent | [Set up with a prompt](docs/start-here.md#set-up-with-a-prompt) | Agent-guided CLI, skill and scoped API key setup |
+| Terminal | [Search from a shell](docs/start-here.md#search-from-a-shell) | Standalone command and scoped API key |
+| Codex CLI | [Connect Codex](docs/connect/codex.md) | Skill with standalone command or local MCP |
+| Claude Code | [Connect Claude Code](docs/connect/claude-code.md) | Skill with standalone command or local MCP |
 | ChatGPT web / Personal | [Connect ChatGPT](docs/connect/chatgpt-work.md) | Hosted OAuth plugin; see qualification limits |
 | Claude web / Free personal | [Connect Claude web](docs/connect/claude-web.md) | Hosted OAuth connector; see qualification limits |
 | Another MCP client | [Generic setup](docs/connect/other-mcp.md) | Qualify its local transport and credential handling |

@@ -213,9 +213,28 @@ def qualify_native(binary: Path) -> None:
     with fixture() as port, tempfile.TemporaryDirectory() as workdir:
         directory = Path(workdir)
         env = configuration(port)
-        clean_env = {"PATH": "/usr/bin:/bin", **env}
+        standalone_env = {"PATH": "/usr/bin:/bin", "HOME": str(directory)}
+        clean_env = {**standalone_env, **env}
         debug_file = directory / "debug.jsonl"
-        assert run([str(binary), "--version"], cwd=directory, env=clean_env)
+        assert run([str(binary), "--version"], cwd=directory, env=standalone_env)
+        source_skill = (
+            Path(__file__).resolve().parents[1]
+            / "skills"
+            / "ragwell-knowledge"
+            / "SKILL.md"
+        )
+        assert (
+            run([str(binary), "skill", "show"], cwd=directory, env=standalone_env)
+            == source_skill.read_text(encoding="utf-8").strip()
+        )
+        for agent, folder in (("codex", ".agents"), ("claude-code", ".claude")):
+            run(
+                [str(binary), "skill", "install", "--agent", agent],
+                cwd=directory,
+                env=standalone_env,
+            )
+            skill = directory / folder / "skills" / "ragwell-knowledge" / "SKILL.md"
+            assert skill.read_bytes() == source_skill.read_bytes()
         status = json.loads(
             run(
                 [str(binary), "--check"],
@@ -236,7 +255,9 @@ def qualify_native(binary: Path) -> None:
         )
         assert_citation(evidence, can_expand=False)
         asyncio.run(qualify_mcp(binary, directory, env))
-    print("Standalone JSON and MCP reproduced the original source citation.")
+    print(
+        "The standalone CLI installed its skill and returned cited JSON and MCP results."
+    )
 
 
 def qualify_sandbox(binary: Path, image: str, peer_image: str) -> None:
@@ -291,6 +312,9 @@ def qualify_sandbox(binary: Path, image: str, peer_image: str) -> None:
                 "-ec",
                 "for tool in python python3 uv; do "
                 'if command -v "$tool" >/dev/null; then exit 1; fi; done\n'
+                "export HOME=/tmp/ragwell-home\n"
+                "/ragwel-cli skill install --agent codex >&2\n"
+                'test -s "$HOME/.agents/skills/ragwell-knowledge/SKILL.md"\n'
                 "/ragwel-cli --check\n"
                 "exec /ragwel-cli search --query-stdin --k 1",
             ],
@@ -303,7 +327,8 @@ def qualify_sandbox(binary: Path, image: str, peer_image: str) -> None:
     finally:
         run(["docker", "stop", "--time", "1", peer])
     print(
-        "Linux x86-64 Docker sandbox without Python or uv returned travel-policy.md, line 3."
+        "Linux x86-64 sandbox without Python or uv installed the skill and "
+        "returned travel-policy.md, line 3."
     )
 
 

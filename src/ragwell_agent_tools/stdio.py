@@ -15,6 +15,7 @@ from . import __version__
 from .diagnostics import DebugLog
 from .operations import SearchInput
 from .settings import Settings, SettingsError
+from .skill import SUPPORTED_AGENTS, run_skill_command
 from .tools import SearchRuntime, ToolFailure, build_server
 
 # UTF-8 takes at most four bytes per character. SearchInput also checks length.
@@ -155,9 +156,23 @@ def main() -> None:
         help="Read a UTF-8 query from stdin",
     )
     search.add_argument("--k", type=int, choices=range(1, 6), default=5)
+    skill = commands.add_parser(
+        "skill", help="Show or install the bundled agent skill", allow_abbrev=False
+    )
+    skill_commands = skill.add_subparsers(dest="skill_command", required=True)
+    skill_commands.add_parser("show", help="Print the bundled SKILL.md")
+    install = skill_commands.add_parser(
+        "install", help="Install the bundled skill for an agent", allow_abbrev=False
+    )
+    install.add_argument("--agent", choices=SUPPORTED_AGENTS, required=True)
     args = parser.parse_args()
     if args.check and args.command is not None:
         parser.error("--check cannot be combined with a command")
+
+    if args.command == "skill":
+        raise SystemExit(
+            run_skill_command(args.agent if args.skill_command == "install" else None)
+        )
 
     # Framework/transport exception logs can contain source or argument values.
     # The application reports sanitized failures through its result contract

@@ -4,6 +4,27 @@ Use Ragwell from a terminal, a shell-capable agent, or an agent configured for
 local MCP. For browser account linking, follow the [ChatGPT](connect/chatgpt-work.md)
 or [Claude web](connect/claude-web.md) guide.
 
+## Set up with a prompt
+
+Copy this prompt into a local Codex CLI or Claude Code chat. Your agent can install
+the CLI and skill and guide you through the dashboard steps. You can also copy a
+prompt for your agent from [Agent connections](https://app.ragwell.dev/dashboard/agent-connections).
+
+~~~text
+Help me set up Ragwell in this agent. Find ragwel-cli on PATH or in $HOME/.local/bin. If skill install --help is unavailable, run the official installer at https://app.ragwell.dev/ragwell-cli-install.sh once, then check again. Run ragwel-cli skill install --agent codex for Codex CLI or --agent claude-code for Claude Code using the installed executable. If the CLI can search but lacks skill install, save https://raw.githubusercontent.com/alexd775/ragwell-agent-tools/main/skills/ragwell-knowledge/SKILL.md as ~/.agents/skills/ragwell-knowledge/SKILL.md for Codex CLI or ~/.claude/skills/ragwell-knowledge/SKILL.md for Claude Code. Keep any existing skill. If you’re blocked, tell me what I need to do next.
+
+Guide me to choose or create a project at https://app.ragwell.dev/dashboard and add documents if needed. Have me create a Retrieval only key for that project at https://app.ragwell.dev/dashboard/api-keys/new. Show me where to set RAGWELL_BASE_URL=https://api.ragwell.dev, RAGWELL_PROJECT_ID, and RAGWELL_API_KEY so this agent can use them. Never ask me to paste the key into chat or print it.
+
+Run the installed executable with --check once configured. Tell me whether project access is ready, whether this agent needs a restart, and whether I still need to confirm my documents are ready. Wait for my first Ragwell question before searching.
+~~~
+
+Bundled skill commands require `ragwel-cli` v0.1.0a6 or later. An agent with
+v0.1.0a5 can still use shell search with the standalone skill.
+
+If you prefer to run the commands yourself, start with the project and tool
+setup below. To use a different agent, check where it loads skills and follow
+the [manual skill instructions](#install-the-ragwell-skill).
+
 ## Prepare your project
 
 In the [Ragwell dashboard](https://app.ragwell.dev), create or choose a project and
@@ -62,6 +83,23 @@ uv tool dir --bin
 The last command shows the executable directory. Use the full `ragwell-agent-tools`
 path in agent configuration. Shell search requires `0.1.0a5` or a later version
 that includes the command.
+
+## Install the Ragwell skill
+
+`ragwel-cli` gives your agent a command it can run. The `ragwell-knowledge` skill
+tells it when to search Ragwell, how to use the CLI or MCP, and how to cite the
+passages it finds. The [setup prompt](#set-up-with-a-prompt) installs the skill from
+the executable. For manual commands, see
+[Codex CLI](connect/codex.md#install-the-ragwell-skill) or
+[Claude Code](connect/claude-code.md#install-the-ragwell-skill).
+
+Use `ragwel-cli skill show` to print the bundled instructions. In another agent
+that supports skills, save those instructions as `ragwell-knowledge/SKILL.md` in
+the directory your host loads. You can also download the standalone instructions.
+In a cloud agent, configure the skill in the host and put the executable where
+the agent's shell runs. [Download SKILL.md](https://raw.githubusercontent.com/alexd775/ragwell-agent-tools/main/skills/ragwell-knowledge/SKILL.md)
+
+For terminal use, go straight to [JSON search](#search-from-a-shell).
 
 ## Supply your connection details
 
@@ -122,11 +160,17 @@ new attempt. A timeout can still record usage.
 
 ## Choose your agent and try a question
 
-Continue with [Codex](connect/codex.md), [Claude Code](connect/claude-code.md), or
-[another local MCP client](connect/other-mcp.md). After connecting, the agent should
-discover `ragwell_search`. Ask:
+After installing the skill and starting your agent with the Ragwell variables,
+invoke `$ragwell-knowledge` in Codex or `/ragwell-knowledge` in Claude Code and ask
+for a cited answer about your project.
 
 > Using the documents in Ragwell, explain how I request leave. Show the supporting sources.
+
+The skill can use `ragwel-cli` from a shell. To enable MCP search and source
+expansion, follow the MCP setup for [Codex](connect/codex.md#add-the-connection),
+[Claude Code](connect/claude-code.md#add-the-connection), or
+[another local MCP client](connect/other-mcp.md). The MCP client should discover
+`ragwell_search` after connecting.
 
 Expect supporting passages and filenames with available line/page/offset references.
 Check them against the documents in Ragwell. Empty results can mean the project

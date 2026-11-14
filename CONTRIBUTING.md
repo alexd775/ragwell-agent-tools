@@ -76,6 +76,11 @@ from an Ubuntu container without Python or uv. A matching tag publishes the
 qualified binaries, open source notices, and `SHA256SUMS` to GitHub Releases
 after the source security and build gates pass.
 
+If a workflow repair lands after a version is tagged, dispatch **Release** on
+`main` with `source_tag` set to that existing version tag to rerun the gates and
+publish its binaries. The workflow resolves the tag once, builds and checks that
+commit, and verifies the tag again before publication.
+
 Archive checks reject private material in both the wheel and source distribution.
 If `dist/` contains older artifacts, pass the exact `--wheel` and `--sdist` paths
 to `scripts/check_public_artifacts.py`, and `--wheel` to the installed qualifier.

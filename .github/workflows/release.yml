@@ -3,6 +3,9 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      source_tag:
+        description: Existing version tag to rebuild using the workflow on main
+        type: string
       publish_pypi:
         description: Publish the tagged Python distributions to PyPI
         type: boolean
@@ -14,17 +17,54 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.source_tag || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
+  source:
+    name: Resolve the release source
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      commit: ${{ steps.source.outputs.commit }}
+      tag: ${{ steps.source.outputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Resolve and verify release identity
+        id: source
+        shell: bash
+        env:
+          REQUESTED_TAG: ${{ inputs.source_tag }}
+        run: |
+          tag=""
+          if [[ -n "$REQUESTED_TAG" ]]; then
+            test "$GITHUB_REF" = refs/heads/main
+            tag="$REQUESTED_TAG"
+          elif [[ "$GITHUB_REF_TYPE" = tag ]]; then
+            tag="$GITHUB_REF_NAME"
+          fi
+          commit="$(git rev-parse HEAD^{commit})"
+          if [[ -n "$tag" ]]; then
+            [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+((a|b|rc)[0-9]+)?$ ]]
+            commit="$(git rev-parse "refs/tags/$tag^{commit}")"
+            git merge-base --is-ancestor "$commit" origin/main
+            version="$(git show "$commit:pyproject.toml" | python3 -c 'import sys,tomllib; print(tomllib.loads(sys.stdin.read())["project"]["version"])')"
+            test "$tag" = "v$version"
+          fi
+          printf 'commit=%s\ntag=%s\n' "$commit" "$tag" >> "$GITHUB_OUTPUT"
+
   security:
     name: Secret, dependency, license and SBOM gate
+    needs: source
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.source.outputs.commit }}
           persist-credentials: false
       - name: Scan exact committed source
         run: bash scripts/source-security.sh
@@ -40,26 +80,19 @@ jobs:
 
   build:
     name: Build and qualify distributions
+    needs: source
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          ref: ${{ needs.source.outputs.commit }}
           persist-credentials: false
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
           version: "0.12.17"
           python-version: "3.11"
           enable-cache: true
-      - name: Verify release identity
-        shell: bash
-        run: |
-          version="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            git merge-base --is-ancestor "${GITHUB_SHA}" origin/main
-            test "${GITHUB_REF_NAME}" = "v${version}"
-          fi
       - name: Install locked environment
         run: uv sync --locked
       - name: Format, lint and type check
@@ -70,7 +103,7 @@ jobs:
       - name: Test without external services
         run: uv run --locked --no-sync pytest
       - name: Record installed runtime and development license declarations
-        run: uv run --locked --no-sync python scripts/license_inventory.py release-evidence/installed-licenses.json --source-commit "${GITHUB_SHA}"
+        run: uv run --locked --no-sync python scripts/license_inventory.py release-evidence/installed-licenses.json --source-commit "$(git rev-parse HEAD)"
       - name: Verify public guides and sample pack
         run: |
           uv run --locked --no-sync python scripts/check_documents.py
@@ -84,7 +117,7 @@ jobs:
       - name: Record source and distribution hashes
         run: |
           mkdir -p release-evidence
-          printf '{"source_commit":"%s"}\n' "${GITHUB_SHA}" > release-evidence/source.json
+          printf '{"source_commit":"%s"}\n' "$(git rev-parse HEAD)" > release-evidence/source.json
           sha256sum dist/*.whl dist/*.tar.gz > release-evidence/SHA256SUMS
           cat release-evidence/SHA256SUMS
       - name: Preserve immutable distributions
@@ -104,8 +137,8 @@ jobs:
 
   publish-pypi:
     name: Publish verified distributions to PyPI
-    if: github.ref_type == 'tag' && github.event_name == 'workflow_dispatch' && inputs.publish_pypi
-    needs: [security, build]
+    if: github.ref_type == 'tag' && needs.source.outputs.tag != '' && github.event_name == 'workflow_dispatch' && inputs.publish_pypi
+    needs: [source, security, build]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
@@ -128,6 +161,7 @@ jobs:
   build-binary:
     name: Build and qualify ragwel-cli / ${{ matrix.platform }}
     if: github.event_name != 'workflow_dispatch' || !inputs.publish_pypi
+    needs: source
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
     strategy:
@@ -141,8 +175,9 @@ jobs:
     env:
       UV_MANAGED_PYTHON: "true"
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.source.outputs.commit }}
           persist-credentials: false
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
@@ -191,8 +226,8 @@ jobs:
 
   publish-binaries:
     name: Publish executables to GitHub Releases
-    if: github.ref_type == 'tag' && (github.event_name != 'workflow_dispatch' || !inputs.publish_pypi)
-    needs: [security, build, build-binary]
+    if: needs.source.outputs.tag != '' && (github.event_name != 'workflow_dispatch' || !inputs.publish_pypi)
+    needs: [source, security, build, build-binary]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -209,8 +244,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          RAGWELL_RELEASE_TAG: ${{ github.ref_name }}
+          RAGWELL_RELEASE_TAG: ${{ needs.source.outputs.tag }}
+          RAGWELL_RELEASE_COMMIT: ${{ needs.source.outputs.commit }}
         run: |
+          tag_ref="refs/tags/$RAGWELL_RELEASE_TAG"
+          tag_commit="$(git ls-remote --exit-code "$GITHUB_SERVER_URL/$GH_REPO.git" "$tag_ref" "$tag_ref^{}" \
+            | awk -v ref="$tag_ref" '$2==ref { plain=$1 } $2==ref"^{}" { peeled=$1 } END { print peeled ? peeled : plain }')"
+          test "$tag_commit" = "$RAGWELL_RELEASE_COMMIT"
           linux="ragwel-cli-${RAGWELL_RELEASE_TAG}-linux-x86_64"
           macos="ragwel-cli-${RAGWELL_RELEASE_TAG}-macos-arm64"
           cat "$linux.sha256" "$macos.sha256" > SHA256SUMS

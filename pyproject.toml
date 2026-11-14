@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ragwell-agent-tools"
-version = "0.1.0a4"
+version = "0.1.0a5"
 description = "Evidence search tools and workflows for agents using Ragwell"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -33,6 +33,7 @@ Repository = "https://github.com/alexd775/ragwell-agent-tools"
 Issues = "https://github.com/alexd775/ragwell-agent-tools/issues"
 
 [dependency-groups]
+binary = ["pyinstaller==6.22.3"]
 dev = [
     "build>=1.6.1,<2",
     "hatchling>=1.32.3,<2",
@@ -46,6 +47,9 @@ dev = [
 
 [tool.uv]
 required-version = "==0.12.17"
+
+[tool.uv.dependency-groups]
+binary = { requires-python = "==3.12.*" }
 
 [tool.hatch.build]
 exclude = ["/private", "/docs/project"]

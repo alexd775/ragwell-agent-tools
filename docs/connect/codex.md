@@ -9,7 +9,8 @@ do not automatically connect a ChatGPT or cloud chat. Test status is in
 
 Add the [Codex configuration](../../integrations/openai/codex.toml) to your local
 Codex `config.toml`, replacing `command` with the full installed executable path.
-Merge it with existing configuration instead of replacing the file. The entry
+Use the path to `ragwel-cli` for the standalone release or `ragwell-agent-tools` for
+the Python package. Merge the entry with existing configuration. It
 forwards the three Ragwell environment variables without storing their values.
 
 Start `codex` from the terminal where you supplied those variables. Open `/mcp`

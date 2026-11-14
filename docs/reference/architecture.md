@@ -21,6 +21,16 @@ descriptive data; it never grants access or changes tool instructions. An absent
 description preserves the generic wording. No document is sampled and no model
 call is made to produce a description.
 
+## Shell search
+
+The standalone `ragwel-cli` executable bundles the Python runtime and local adapter.
+With no arguments it starts the same MCP server. `ragwel-cli search --query-stdin`
+runs one search through the same SDK, grant check and evidence projection, then
+prints JSON and exits. The origin, project and key come from the environment
+configured by the user or host. Each invocation has its own process deadline.
+MCP keeps source references for the lifetime of its connection so the agent can
+expand a passage after reviewing search results.
+
 ## Hosted connection
 
 The hosted production endpoint is `https://app.ragwell.dev/mcp`. Hosted routes

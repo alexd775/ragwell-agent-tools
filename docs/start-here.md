@@ -1,9 +1,8 @@
 # Connect your Ragwell knowledge
 
-This local early-access setup is for people comfortable using a terminal. If you
-prefer a sign-in-and-connect flow, follow the [ChatGPT](connect/chatgpt-work.md)
-or [Claude web](connect/claude-web.md) hosted guide.
-The pilot retrieves passages and citations from one project; your agent explains them.
+Use Ragwell from a terminal, a shell-capable agent, or an agent configured for
+local MCP. For browser account linking, follow the [ChatGPT](connect/chatgpt-work.md)
+or [Claude web](connect/claude-web.md) guide.
 
 ## Prepare your project
 
@@ -17,31 +16,57 @@ the project ID and use `https://api.ragwell.dev` as the API origin. The API orig
 is the service address, not the dashboard page URL or a `/v1` endpoint.
 Keep the key in your credential settings and give it a useful name and expiry.
 
-To let the agent read more surrounding text when a passage is unclear, also grant
-**`document:read`**. Search alone works without it. Source expansion requires the
-current API; if the result says expansion is unavailable, use the passages
-already returned or open the document in Ragwell.
+To let an MCP agent read more surrounding text, also grant **`document:read`**.
+The shell search command needs only `retrieval:search`.
 
 ## Install the local tool
 
-Use Python 3.11 or newer and [uv](https://docs.astral.sh/uv/getting-started/installation/).
-Download the [public tools repository](https://github.com/alexd775/ragwell-agent-tools)
-using **Code → Download ZIP**, unzip it, and open a terminal in the extracted
-folder. From that folder, run:
+The standalone `ragwel-cli` executable bundles its runtime for shell search and
+local MCP. Run the installer when a binary release is available.
 
 ```sh
-uv tool install . --python 3.12
+curl -fsSL https://app.ragwell.dev/ragwell-cli-install.sh | sh
+"$HOME/.local/bin/ragwel-cli" --version
+```
+
+The installer detects Linux x86-64 or macOS Apple silicon and selects the newest
+complete release by version, including prereleases. It checks the binary against
+the release's `SHA256SUMS` and runs it to verify the version before installing it.
+It prints the full executable path. The default is `$HOME/.local/bin/ragwel-cli`.
+Set `RAGWELL_INSTALL_DIR` to an absolute path to use a different directory. The
+Linux build targets the Ubuntu 22.04 baseline.
+
+To install a specific version, use `sh -s -- v0.1.0a5` in place of `sh` and
+substitute an available tag. Assets use the names `ragwel-cli-<tag>-linux-x86_64`
+and `ragwel-cli-<tag>-macos-arm64`. [GitHub Releases](https://github.com/alexd775/ragwell-agent-tools/releases)
+
+Use the full path to `ragwel-cli` in an MCP configuration and in the commands below.
+In a cloud sandbox, choose a path where the sandbox allows programs to run.
+The sandbox needs HTTPS access to Ragwell and a way to inject secrets into the
+process environment. To run the installer inside it, allow HTTPS access to the
+Ragwell dashboard, GitHub's API, and GitHub release assets as well.
+
+The macOS executable uses an ad hoc signature. Use the Python package on systems
+that require notarization for downloaded executables.
+
+The published [Python package](https://pypi.org/project/ragwell-agent-tools/0.1.0a4/)
+offers local MCP with Python 3.11 or newer and [uv](https://docs.astral.sh/uv/getting-started/installation/).
+For example, to install the published `0.1.0a4` MCP adapter:
+
+```sh
+uv tool install 'ragwell-agent-tools==0.1.0a4' --python 3.12
 ragwell-agent-tools --version
 uv tool dir --bin
 ```
 
-The version should be `0.1.0a3`. The last command shows the executable directory;
-use its full `ragwell-agent-tools` path in agent configuration. This package has
-not been published to PyPI; do not substitute an unverified package with the same name.
+The last command shows the executable directory. Use the full `ragwell-agent-tools`
+path in agent configuration. Shell search requires `0.1.0a5` or a later version
+that includes the command.
 
 ## Supply your connection details
 
-Set these variables in the environment from which you start your local agent:
+Set these variables in the environment from which you run Ragwell or start your
+agent:
 
 ```sh
 export RAGWELL_BASE_URL="https://api.ragwell.dev"
@@ -63,23 +88,37 @@ read -r -s -p 'Ragwell API key: ' RAGWELL_API_KEY
 export RAGWELL_API_KEY
 ```
 
-The key prompt hides typing. Do not paste it into a conversation, configuration
-example, issue or Git file. These variables apply to processes launched from this
-terminal; a separately opened desktop app may not inherit them.
+The key prompt hides typing. For a cloud sandbox, use the host's secret settings
+to provide `RAGWELL_API_KEY`. Keep the key out of chat, command arguments, and
+project files. Set the API origin and project in your trusted configuration.
+Terminal exports apply to processes launched from that terminal.
 
 ## Check the connection without a search
 
 After supplying all three variables, run:
 
 ```sh
-ragwell-agent-tools --check
+"$HOME/.local/bin/ragwel-cli" --check
 ```
 
-Expect `status: ready` and `ragwell_search`. With `document:read`,
-`ragwell_fetch_source` is also listed. This reads only current grants; it makes no
-search, uploads or document changes. If it fails, follow the returned guidance
-before connecting an agent. It requires the current API and SDK 0.2.2.
-Other projects granted to the same key are never offered as agent choices.
+For the Python package, use `ragwell-agent-tools --check`. Expect `status: ready`
+and `ragwell_search`. With `document:read`, the check also lists
+`ragwell_fetch_source` as an MCP tool. This check reads current grants and uses
+zero searches.
+
+## Search from a shell
+
+With the starter documents ready, send the UTF-8 query on stdin:
+
+```sh
+printf '%s' 'How do I request leave?' | "$HOME/.local/bin/ragwel-cli" search --query-stdin
+```
+
+The command writes one JSON result with passages and original source coordinates.
+Use `--k` to request one to five matches, with five as the default. Source
+expansion is available through MCP. Each search can consume workspace usage.
+If a search fails, read the error and stop before deciding whether to make a
+new attempt. A timeout can still record usage.
 
 ## Choose your agent and try a question
 
@@ -100,7 +139,8 @@ agent may need to refresh its tool list or restart; cached tools cannot restore 
 
 ## Disconnect
 
-Remove or disable the Ragwell MCP entry in your agent. Revoke its dedicated key
-in Ragwell to stop API access even if another process retains the old configuration.
+Revoke the dedicated key in Ragwell to stop API access from both local routes.
+Remove or disable the Ragwell MCP entry if you configured one. Remove the key
+from the terminal or sandbox secret configuration.
 When replacing an expired key, update the environment and restart the local agent.
 See [troubleshooting](troubleshooting.md) for common problems.

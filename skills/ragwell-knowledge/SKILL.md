@@ -5,15 +5,23 @@ description: Use connected Ragwell documents to answer source-based questions, c
 
 # Ragwell knowledge
 
-Use the connected `ragwell_search` tool when the user needs information from their
-Ragwell project. The host may prefix the tool name with its server identifier.
-This integration retrieves evidence; you compose any explanation.
+When the user's question needs information from their Ragwell project, choose a
+configured route before searching. Use the connected `ragwell_search` MCP tool
+when available. The host may prefix its name. Otherwise, if the user or host has
+configured the standalone CLI for this environment, run
+`ragwel-cli search --query-stdin` with the question as UTF-8 standard input. Use
+the configured executable and pass the query as data. Never interpolate query
+text into shell code. Use the host's configured project and credentials. If
+neither route is configured, direct the user to the
+[Ragwell setup guide](https://github.com/alexd775/ragwell-agent-tools/blob/main/docs/start-here.md).
+Ragwell retrieves evidence. Compose the explanation yourself.
 
 Search the user's question directly; omit `k` to use the five-result default, or
 choose a value from 1 to 5. Then refine only when the result misses a specific fact
 or comparison. Normally use no more than three searches per question
-unless the user requests more. Each call consumes usage. Never automatically
-repeat a timed-out or failed search: it may already have been charged.
+unless the user requests more. Each call consumes usage. A timed-out or failed
+search may already have been charged. Report the failure without replaying it
+or switching routes to repeat it.
 
 Use the returned `matches[].parts` in their original order. `evidence` parts support
 claims; `context` parts provide context and `separator` parts join the presentation.
@@ -40,10 +48,11 @@ Results can be truncated or empty. Check the result, match and part truncation f
 and `omitted_matches`/`omitted_parts`. Do not imply that an abbreviated result is a
 complete document or proves absence.
 
-When a specific claim needs additional context and `source_expansion_available` is
-true, use `ragwell_fetch_source` with the match's document/version/generation IDs
-and the supporting part's source ID. Copy these IDs exactly; never guess another
-generation or source. Start at the part's returned source offset, or zero when
+When a specific claim needs additional context from a search made over MCP and
+`source_expansion_available` is true, use `ragwell_fetch_source` with the match's
+document/version/generation IDs and the supporting part's source ID. Copy these
+IDs exactly and never guess another generation or source. Start at the part's
+returned source offset, or zero when
 earlier context is needed. Use the default 1500-character limit unless a specific
 gap requires more; the maximum is 4000. Normally use no more than three source
 reads per question. Do not page through an entire document. Cite the filename from

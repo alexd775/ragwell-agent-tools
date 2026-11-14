@@ -9,6 +9,15 @@ metadata reads, failure handling and no-search discovery. These checks do not
 establish new live-host qualification. Earlier **0.1.0a3**
 observations below used published SDK **0.2.2**.
 
+The standalone `ragwel-cli` release targets Linux x86-64 and macOS arm64. It bundles
+the runtime for local MCP and JSON shell search. The 0.1.0a5 candidate passed
+JSON and MCP checks on both targets against a synthetic API peer. Its Linux
+build also returned a cited passage from a clean Ubuntu 22.04 x86-64 container
+without Python or uv available as commands. The release workflow repeats these
+checks before publication. Named coding agents and cloud sandboxes have their
+own execution, network and secret settings. Historical client observations
+below used the Python package.
+
 The client observations below were recorded on **2026-10-02 through 2026-10-04**.
 They establish the named versions and account surfaces; other versions, plans
 and installation routes need their own checks.

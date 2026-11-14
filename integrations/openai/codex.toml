@@ -1,7 +1,7 @@
-# Replace command with the absolute path to the installed executable.
+# Use the absolute path to the release binary or the Python package executable.
 # Forward credentials from the host environment; do not write their values here.
 [mcp_servers.ragwell]
-command = "/absolute/path/to/ragwell-agent-tools"
+command = "/absolute/path/to/ragwel-cli"
 env_vars = ["RAGWELL_BASE_URL", "RAGWELL_PROJECT_ID", "RAGWELL_API_KEY"]
 startup_timeout_sec = 15
 tool_timeout_sec = 30

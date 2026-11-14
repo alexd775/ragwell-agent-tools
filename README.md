@@ -4,14 +4,12 @@ Ask your agent questions about documents in your Ragwell project and get evidenc
 you can check against the original sources. Ragwell retrieves relevant passages;
 your agent writes the explanation.
 
-**Local early access:** the local adapter provides MCP search, bounded source
-expansion and a reusable Ragwell skill. Source reads passed guarded Codex and
-Claude Code tasks. Version 0.1.0a4 adds the owner's project description to
-authorized tool listings, helping agents recognize the connected knowledge. It
-requires published SDK 0.2.3 and a compatible API. Local use requires terminal
-setup, a ready Ragwell project
-and a dedicated API key. See the [compatibility record](docs/compatibility.md)
-for the earlier qualified clients and current delivery limits.
+The local adapter provides MCP search, bounded source expansion and an optional
+Ragwell skill. The [local setup guide](docs/start-here.md) covers the standalone
+`ragwel-cli` executable for Linux x86-64 and macOS Apple silicon, the Python package,
+and direct JSON search from a shell. Both local install routes use a ready
+project and a dedicated API key. See the [compatibility record](docs/compatibility.md)
+for tested clients and versions.
 
 **Hosted connection:** use the production endpoint and OAuth client settings in
 the ChatGPT or Claude web guide. Earlier invited testers connected through
@@ -23,6 +21,7 @@ test evidence; intended client support is not yet a certification.
 
 | Your agent | Start here | Current route |
 |---|---|---|
+| Shell-capable agent | [Search from a shell](docs/start-here.md#search-from-a-shell) | Standalone command and scoped API key |
 | Codex CLI | [Connect Codex](docs/connect/codex.md) | Local MCP and optional skill |
 | Claude Code | [Connect Claude Code](docs/connect/claude-code.md) | Local MCP and optional skill |
 | ChatGPT web / Personal | [Connect ChatGPT](docs/connect/chatgpt-work.md) | Hosted OAuth plugin; see qualification limits |

@@ -1,8 +1,9 @@
 # Connect another MCP client
 
-The pilot exposes MCP over local stdio. A client must start the installed
-`ragwell-agent-tools` executable and supply `RAGWELL_BASE_URL`, `RAGWELL_PROJECT_ID`
-and `RAGWELL_API_KEY` through its process environment or credential configuration.
+The adapter exposes MCP over local stdio. A client starts the `ragwel-cli` release
+executable or the Python package's `ragwell-agent-tools` command without
+arguments. Supply `RAGWELL_BASE_URL`, `RAGWELL_PROJECT_ID` and `RAGWELL_API_KEY`
+through its process environment or credential configuration.
 
 [The generic descriptor](../../integrations/generic/stdio.json) describes those
 requirements; it is not an importable configuration format for every host. Follow

@@ -6,13 +6,14 @@ local MCP process; it does not establish Claude desktop or web support. See
 
 ## Add the connection
 
-Set `RAGWELL_TOOLS_COMMAND` to the full installed executable path in the terminal
-where you set the other Ragwell variables. For example:
+Set `RAGWELL_TOOLS_COMMAND` to the full executable path in the terminal where you
+set the other Ragwell variables. For the standalone release, use:
 
 ```sh
-export RAGWELL_TOOLS_COMMAND="/absolute/path/to/ragwell-agent-tools"
+export RAGWELL_TOOLS_COMMAND="/absolute/path/to/ragwel-cli"
 ```
 
+For the Python package, use the full path to `ragwell-agent-tools`.
 Merge [the Claude configuration](../../integrations/claude/mcp.json) into the
 project's `.mcp.json`. It contains variable references rather than secret values.
 Do not overwrite other MCP entries. Start `claude` from that terminal and approve

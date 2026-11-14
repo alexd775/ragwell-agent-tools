@@ -55,11 +55,26 @@ Package publication uses `.github/workflows/release.yml` with GitHub environment
 `ragwell-agent-tools`, workflow `release.yml`, project `ragwell-agent-tools`.
 For the first publication, the account owner configures a
 [pending Trusted Publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).
-No repository API token is required. A `v` tag matching the package version on
-`main` publishes the exact distributions after the independent security and
-build/clean-install jobs succeed. A manual workflow dispatch builds and checks
-the selected ref; publication still requires a tag ref. Release artifacts retain
-the source commit and distribution hashes separately from uploadable packages.
+No repository API token is required. To publish Python distributions, manually
+run the release workflow on a `v` tag matching the package version on `main` and
+select **Publish the tagged Python distributions to PyPI**. The security and
+build/clean-install jobs must pass. Release artifacts retain the source commit
+and distribution hashes separately from uploadable packages.
+
+The release workflow also builds the standalone `ragwel-cli` executable on Linux
+x86-64 and macOS arm64. To build and test it on one of those targets, use the
+locked `binary` group with Python 3.12.
+
+```sh
+uv sync --locked --no-dev --group binary --python 3.12.14
+uv run --locked --no-sync --no-dev --group binary python scripts/build_binary.py
+uv run --locked --no-sync --no-dev --group binary python scripts/qualify_binary.py --binary dist/binary/ragwel-cli
+```
+
+The Linux release job also runs a cited search against a synthetic API fixture
+from an Ubuntu container without Python or uv. A matching tag publishes the
+qualified binaries, open source notices, and `SHA256SUMS` to GitHub Releases
+after the source security and build gates pass.
 
 Archive checks reject private material in both the wheel and source distribution.
 If `dist/` contains older artifacts, pass the exact `--wheel` and `--sdist` paths

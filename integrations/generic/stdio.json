@@ -1,5 +1,5 @@
 {
-  "command": "/absolute/path/to/ragwell-agent-tools",
+  "command": "/absolute/path/to/ragwel-cli",
   "args": [],
   "requiredEnvironment": ["RAGWELL_BASE_URL", "RAGWELL_PROJECT_ID", "RAGWELL_API_KEY"]
 }

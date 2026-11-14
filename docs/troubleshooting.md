@@ -32,7 +32,7 @@
 | `project_unavailable` | Check the configured project ID and its current availability/access in Ragwell. |
 | Successful search with no matches | Check that documents are ready and try a more specific question. |
 | Truncated result | Ask for a bounded supporting source slice when `ragwell_fetch_source` is available, or view the source in Ragwell. |
-| `discovery_unavailable`, `discovery_timeout` or a tool-list error | Run `ragwell-agent-tools --check`. Verify API/package compatibility and connectivity. Discovery makes no search; unavailable discovery never enables tools. |
+| `discovery_unavailable`, `discovery_timeout` or a tool-list error | Run `ragwel-cli --check` with the release binary or `ragwell-agent-tools --check` with the Python package. Verify API/package compatibility and connectivity. Discovery uses zero searches. |
 | `quota_exceeded` | Review usage/limits in Ragwell before making further searches. |
 | `rate_limited` | Wait for the reported interval before deciding whether another search is needed. |
 | `busy` | Wait for the existing search to finish or cancel it in your agent. |

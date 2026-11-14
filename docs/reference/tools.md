@@ -28,6 +28,22 @@ API request IDs are forwarded only when UUID-shaped; raw API/provider error text
 is never returned. Deadlines/transport failures mark uncertain usage. Cancellation
 propagates locally and frees admission; it does not prove remote usage was refunded.
 
+## JSON shell search
+
+`ragwel-cli search --query-stdin [--k 1–5]` accepts one UTF-8 query on standard input
+and applies the same validation and evidence projection as MCP. The Python
+package uses the executable name `ragwell-agent-tools`. Each search command
+writes a single JSON result to stdout. A successful result contains `matches` and
+uses exit status 0. A failure carries a stable code, a sanitized message and
+usage uncertainty when relevant, and exits with a nonzero status.
+
+Shell results report `source_expansion_available: false`. For subsequent source
+reads, start with a search over MCP so the agent can use references from its
+active connection. A shell invocation has the same one-attempt rule and API
+usage limits. Process-level limits apply to each invocation independently.
+
+## Process settings
+
 | Setting | Default and bound |
 |---|---|
 | `RAGWELL_BASE_URL` | Required HTTPS origin, no userinfo/path/query/fragment |
